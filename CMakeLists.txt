@@ -91,7 +91,7 @@ add_library(Smore INTERFACE)
 
 # Link the engine modules 
 target_link_libraries(Smore INTERFACE
-  Core
+  Smore::Core
 )
 
 # Create an alias for the Engine.

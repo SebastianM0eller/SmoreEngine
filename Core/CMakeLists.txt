@@ -9,7 +9,9 @@
 # Set the core sources.
 set(CORE_SOURCES
   include/Core/Window.h
-  include/Core/Application.
+  include/Core/Time.h
+  include/Core/Application.h
+  src/Application.cpp
 )
 
 # Create the library, using the core sources.
