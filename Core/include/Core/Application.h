@@ -23,12 +23,25 @@ struct ApplicationSpecification {
 ///
 class Application {
    public:
+    ///
+    /// Construct the application, based on the provided specifications.
+    ///
     Application(const ApplicationSpecification& appSpec);
     ~Application();
 
+    ///
+    /// Starts the main engine loop.
+    ///
     void Run();
+
+    ///
+    /// Signals that the application should shutdown, at the end of the current frame.
+    ///
     void Stop() noexcept;
 
+    ///
+    /// Retrives a reference to the global application singleton.
+    ///
     static Application& Get() noexcept;
 
    private:

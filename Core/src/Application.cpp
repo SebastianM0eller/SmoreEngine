@@ -18,8 +18,6 @@ Application::Application(const ApplicationSpecification& appSpec) : m_Spec{appSp
 
     m_Window->Create(appSpec.windowConfig);
     m_Window->SetVSync(appSpec.VSync);
-
-    Time::Init();
 }
 
 void Application::Run() {
@@ -33,7 +31,7 @@ void Application::Run() {
 
         /*
         const float currentTime = Time::GetTime();
-        const float deltaTime = lastTime - currentTime;
+        const float deltaTime = currentTime - lastTime;
         lastTime = currentTime;
         */
 
