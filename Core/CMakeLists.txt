@@ -8,7 +8,8 @@
 
 # Set the core sources.
 set(CORE_SOURCES
-  # Add files here "Filename"
+  include/Core/Window.h
+  include/Core/Application.
 )
 
 # Create the library, using the core sources.

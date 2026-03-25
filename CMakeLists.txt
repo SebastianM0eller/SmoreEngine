@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.30)
 project(Smore 
   VERSION 0.0.1
   DESCRIPTION "A C++23 game engine project, for fun and learning"
-  LANGUAGE CXX
+  LANGUAGES CXX
 )
 
 # ==================================
