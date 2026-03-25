@@ -36,7 +36,7 @@ class Window {
     virtual void SetVSync(bool enabled) noexcept = 0;
     virtual bool IsVSync() const noexcept = 0;
 
-    static std::unique_ptr<Window> Create(const WindowConfig& config = WindowConfig());
+    static std::shared_ptr<Window> Create(const WindowConfig& config = WindowConfig());
 };
 
 }  // namespace Smore::Core
