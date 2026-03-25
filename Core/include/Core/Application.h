@@ -16,6 +16,11 @@ struct ApplicationSpecification {
     bool VSync{true};
 };
 
+///
+/// The main entry for the Engine.
+/// The application manages the main game loop.
+/// There should only be one instance of Application.
+///
 class Application {
    public:
     Application(const ApplicationSpecification& appSpec);
