@@ -26,17 +26,51 @@ class Window {
    public:
     virtual ~Window() = default;
 
-    virtual void SwapBuffer() = 0;
+    ///
+    /// Processed pending events like keypresses, mouse movement and resizing.
+    /// This must be called, at the very beginning of the engine's main loop.
+    ///
     virtual void PollEvents() = 0;
 
+    ///
+    /// Swaps the buffer, to display a new frame.
+    /// This must be called, at the very end of the engine's main loop.
+    ///
+    virtual void SwapBuffer() = 0;
+
+    ///
+    /// Checks if someone/something has requested the window to close.
+    /// Returns true, if the window should close.
+    ///
     virtual bool ShouldClose() const noexcept = 0;
 
+    ///
+    /// Returns the current width of the window in pixels.
+    ///
     virtual uint32_t GetWidth() const noexcept = 0;
+
+    ///
+    /// Returns the current height of the window in pixels.
+    ///
     virtual uint32_t GetHeight() const noexcept = 0;
 
+    ///
+    /// Enables of disables VSync.
+    /// enabled if true.
+    /// If VSync is on, the engine's framerate is capped to the monitors refreshrate.
+    ///
     virtual void SetVSync(bool enabled) noexcept = 0;
+
+    ///
+    /// Returns true if VSync is currently enabled.
+    ///
     virtual bool IsVSync() const noexcept = 0;
 
+    ///
+    /// Factory methods to create the appropriate window.
+    /// Constructs the window, based on the provided WindowConfig.
+    /// Returns a unique_ptr to the new window.
+    ///
     static std::unique_ptr<Window> Create(const WindowConfig& config = WindowConfig());
 };
 
