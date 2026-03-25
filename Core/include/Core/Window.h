@@ -14,9 +14,9 @@ namespace Smore::Core {
 /// A struct containing the information neccecary to create a window.
 ///
 struct WindowConfig {
-    std::string title = "Smore";
-    uint32_t width = 1280;
-    uint32_t height = 720;
+    std::string title{"Smore"};
+    uint32_t width{1280};
+    uint32_t height{720};
 };
 
 ///
