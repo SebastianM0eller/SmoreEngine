@@ -33,6 +33,9 @@ class Window {
     virtual uint32_t GetWidth() const noexcept = 0;
     virtual uint32_t GetHeight() const noexcept = 0;
 
+    virtual void SetVSync(bool enabled) noexcept = 0;
+    virtual bool IsVSync() const noexcept = 0;
+
     static std::unique_ptr<Window> Create(const WindowConfig& config = WindowConfig());
 };
 
