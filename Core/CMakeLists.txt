@@ -14,6 +14,13 @@ set(CORE_SOURCES
   src/Application.cpp
 )
 
+# Set the files for the platform specific implementation.
+if (SMORE_HEADLESS)
+  list(APPEND CORE_SOURCES src/Playform/Headless/HeadlessWindow.cpp)
+else()
+  list(APPEND CORE_SOURCES src/Platform/Desktop/GlfwWindow.cpp)
+endif()
+
 # Create the library, using the core sources.
 add_library(SmoreCore STATIC ${CORE_SOURCES})
 
