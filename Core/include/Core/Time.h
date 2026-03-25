@@ -7,7 +7,9 @@
 namespace Smore::Core {
 class Time {
    public:
-    // Returns the time in seconds, since the Engine started.
+    ///
+    /// Returns the time in seconds, since the Engine started.
+    ///
     static float GetTime() {
         // We use steady_clock because it is monotonic.
         auto time = std::chrono::steady_clock::now();
@@ -16,13 +18,8 @@ class Time {
         return duration.count();
     }
 
-    // Call once in the Application Constructor to set the startime.
-    static void Init() {
-        s_StartTime = std::chrono::steady_clock::now();
-    }
-
    private:
-    static inline std::chrono::time_point<std::chrono::steady_clock> s_StartTime;
+    static inline std::chrono::time_point<std::chrono::steady_clock> s_StartTime = std::chrono::steady_clock::now();
 };
 
 }  // namespace Smore::Core
