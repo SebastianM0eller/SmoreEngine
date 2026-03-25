@@ -26,7 +26,8 @@ class Window {
    public:
     virtual ~Window() = default;
 
-    virtual void Update() = 0;
+    virtual void SwapBuffer() = 0;
+    virtual void PollEvents() = 0;
 
     virtual bool ShouldClose() const noexcept = 0;
 
