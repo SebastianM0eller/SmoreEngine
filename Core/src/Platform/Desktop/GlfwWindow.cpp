@@ -2,10 +2,9 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
+#include <Core/Logging.h>
 #include <GLFW/glfw3.h>
 #include <Platform/Desktop/GlfwWindow.h>
-
-#include <iostream>
 
 #ifdef SMORE_ENABLE_OPENGL
 #include <Platform/OpenGL/OpenGLContext.h>
@@ -13,15 +12,23 @@
 
 namespace Smore::Core {
 
+static uint8_t s_GlfwWindowCount = 0;
+
 GlfwWindow::GlfwWindow(const WindowConfig& config) {
     m_Data.API = config.API;
     m_Data.width = config.width;
     m_Data.height = config.height;
     m_Data.VSync = false;
 
-    if (!glfwInit()) {
-        // Todo: Log Fatal Error.
-        return;
+    // If we have no windows alive, we need to initialize GLFW.
+    if (s_GlfwWindowCount == 0) {
+        if (!glfwInit()) {
+            // Todo: Get the error
+            SMORE_CORE_FATAL("GLFW Failed to initalize");
+            return;
+        }
+
+        SMORE_CORE_INFO("GLFW was Initialized");
     }
 
     // We configure GLFW based on the API we want.
@@ -41,24 +48,32 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
             break;
 
         default:
-            // Todo: Log the Fatal Error.
-            std::cerr << "Failed to create GlfwWindow!\n";
-            glfwTerminate();
+            SMORE_CORE_FATAL("Failed to find a valid API");
+            if (s_GlfwWindowCount == 0) {
+                glfwTerminate();
+                SMORE_CORE_INFO("GLFW Was Terminated");
+            }
             return;
     }
 
     m_Window = glfwCreateWindow(m_Data.width, m_Data.height, config.title.c_str(), NULL, NULL);
 
     if (!m_Window) {
-        // Todo: Log Fatal Error.
-        glfwTerminate();
+        // Todo: Retrieve the error.
+        SMORE_CORE_FATAL("Failed to create GLFWwindow");
+        if (s_GlfwWindowCount == 0) {
+            glfwTerminate();
+            SMORE_CORE_INFO("GLFW Was Terminated");
+        }
         return;
     }
+
+    s_GlfwWindowCount++;
+    SMORE_CORE_INFO("GlfwWindow was Created: '{}', {}x{}", config.title, m_Data.width, m_Data.height);
 
     // We now create the context.
     switch (m_Data.API) {
 #ifdef SMORE_ENABLE_OPENGL
-
         case GraphicsAPI::OpenGL:
             m_Context = std::make_unique<OpenGLContext>(m_Window);
             break;
@@ -80,12 +95,20 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
 GlfwWindow::~GlfwWindow() {
     if (m_Window) {
         glfwDestroyWindow(m_Window);
+        SMORE_CORE_INFO("GlfwWindow was Destroyed");
+
+        s_GlfwWindowCount--;
+
+        if (s_GlfwWindowCount == 0) {
+            glfwTerminate();
+            SMORE_CORE_INFO("GLFW Was Terminated");
+        }
     }
 }
 
 void GlfwWindow::PollEvents() { glfwPollEvents(); }
 
-void GlfwWindow::SwapBuffer() {
+void GlfwWindow::SwapBuffer() noexcept {
     if (m_Context) {
         m_Context->SwapBuffer();
     }

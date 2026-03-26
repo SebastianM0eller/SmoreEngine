@@ -14,7 +14,7 @@ class GlfwWindow : public Window {
     virtual ~GlfwWindow();
 
     virtual void PollEvents() override;
-    virtual void SwapBuffer() override;
+    virtual void SwapBuffer() noexcept override;
 
     virtual bool ShouldClose() const noexcept override;
 

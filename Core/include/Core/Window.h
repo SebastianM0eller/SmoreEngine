@@ -45,7 +45,7 @@ class Window {
     /// Swaps the buffer, to display a new frame.
     /// This must be called, at the very end of the engine's main loop.
     ///
-    virtual void SwapBuffer() = 0;
+    virtual void SwapBuffer() noexcept = 0;
 
     ///
     /// Checks if someone/something has requested the window to close.

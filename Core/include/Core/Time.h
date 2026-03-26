@@ -5,6 +5,10 @@
 #include <chrono>
 
 namespace Smore::Core {
+
+///
+/// A simple class, to keep track of the time since Engine start.
+///
 class Time {
    public:
     ///

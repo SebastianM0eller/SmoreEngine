@@ -1,0 +1,2 @@
+Add logging through the current Engine.
+So stuff like, initialized GlfwWindow, or HeadlessWindow etc.

@@ -17,8 +17,8 @@ class OpenGLContext : public GraphicsContext {
     ~OpenGLContext() override = default;
 
     void Init() override;
-    void SwapBuffer() override;
-    void SetSwapInterval(uint8_t interval) override;
+    void SwapBuffer() noexcept override;
+    void SetSwapInterval(uint8_t interval) noexcept override;
 
    private:
     GLFWwindow* m_WindowHandle;

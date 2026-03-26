@@ -7,6 +7,8 @@
 
 #include <cassert>
 
+#include "Core/Logging.h"
+
 namespace Smore::Core {
 
 static Application* s_Application = nullptr;
@@ -15,6 +17,11 @@ Application::Application(const ApplicationSpecification& appSpec) : m_Spec{appSp
     s_Application = this;
 
     m_Window = Window::Create(appSpec.windowConfig);
+
+    if (!m_Window) {
+        SMORE_CORE_FATAL("Application Window could not be initialized");
+    }
+
     m_Window->SetVSync(appSpec.VSync);
 }
 

@@ -22,11 +22,12 @@ class GraphicsContext {
     ///
     /// Swap the buffers, to display the next frame.
     ///
-    virtual void SwapBuffer() = 0;
+    virtual void SwapBuffer() noexcept = 0;
 
     ///
     /// interval = 1 to enable VSync, 0 to disable VSync.
     ///
-    virtual void SetSwapInterval(uint8_t interval) = 0;
+    virtual void SetSwapInterval(uint8_t interval) noexcept = 0;
 };
+
 }  // namespace Smore::Core

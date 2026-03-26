@@ -13,7 +13,7 @@ class HeadlessWindow : public Window {
     virtual ~HeadlessWindow() = default;
 
     virtual void PollEvents() override { /* Doesn't do anything */ }
-    virtual void SwapBuffer() override { /* Doesn't do anything */ }
+    virtual void SwapBuffer() noexcept override { /* Doesn't do anything */ }
 
     virtual bool ShouldClose() const noexcept override { return false; }
 
