@@ -2,8 +2,6 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
-#pragma once
-
 #include <Core/Application.h>
 #include <Core/Time.h>
 
@@ -16,9 +14,11 @@ static Application* s_Application = nullptr;
 Application::Application(const ApplicationSpecification& appSpec) : m_Spec{appSpec} {
     s_Application = this;
 
-    m_Window->Create(appSpec.windowConfig);
+    m_Window = Window::Create(appSpec.windowConfig);
     m_Window->SetVSync(appSpec.VSync);
 }
+
+Application::~Application() { s_Application = nullptr; }
 
 void Application::Run() {
     m_IsRunning = true;
@@ -46,9 +46,7 @@ void Application::Run() {
     }
 }
 
-void Application::Stop() noexcept {
-    m_IsRunning = false;
-}
+void Application::Stop() noexcept { m_IsRunning = false; }
 
 Application& Application::Get() noexcept {
     assert(s_Application && "Can't retrieve the application, if it is not initialized.");

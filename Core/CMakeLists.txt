@@ -3,11 +3,12 @@
 # SPDX-License-Identifier: MIT
 
 # =========================
-#      Smore::Core
+#   SMORE::CORE SOURCES
 # =========================
 
 # Set the core sources.
 set(CORE_SOURCES
+  include/Core/GraphicsContext.h
   include/Core/Window.h
   include/Core/Time.h
   include/Core/Application.h
@@ -16,9 +17,20 @@ set(CORE_SOURCES
 
 # Set the files for the platform specific implementation.
 if (SMORE_HEADLESS)
-  list(APPEND CORE_SOURCES src/Playform/Headless/HeadlessWindow.cpp)
+  list(APPEND CORE_SOURCES 
+    src/Platform/Headless/HeadlessWindow.cpp
+  )
 else()
-  list(APPEND CORE_SOURCES src/Platform/Desktop/GlfwWindow.cpp)
+  list(APPEND CORE_SOURCES 
+    src/Platform/Desktop/GlfwWindow.cpp
+  )
+endif()
+
+# Graphics API specific implementation.
+if (SMORE_ENABLE_OPENGL)
+  list(APPEND CORE_SOURCES 
+    src/Platform/OpenGL/OpenGLContext.cpp
+  )
 endif()
 
 # Create the library, using the core sources.
@@ -35,5 +47,22 @@ target_include_directories(SmoreCore
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+# Create the definitions.
+
+if (SMORE_ENABLE_OPENGL)
+    target_compile_definitions(SmoreCore PRIVATE SMORE_ENABLE_OPENGL)
+endif()
+
 # Set the compiler warnings.
 target_link_libraries(SmoreCore PRIVATE SmoreWarnings)
+
+# Add the dependencies.
+if (NOT SMORE_HEADLESS)
+  target_link_libraries(SmoreCore PRIVATE glfw)
+endif()
+
+if (SMORE_ENABLE_OPENGL)
+  target_link_libraries(SmoreCore PRIVATE glad)
+endif()
+
+# Add GLAD, if OpenGL is used.

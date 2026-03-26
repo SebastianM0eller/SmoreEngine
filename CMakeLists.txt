@@ -6,8 +6,17 @@ cmake_minimum_required(VERSION 3.30)
 project(Smore 
   VERSION 0.0.1
   DESCRIPTION "A C++23 game engine project, for fun and learning"
-  LANGUAGES CXX
+  LANGUAGES CXX C
 )
+
+# =========================
+#      SMORE OPTIONS
+# =========================
+
+option(SMORE_HEADLESS "Build without window and graphics support" OFF)
+
+# Graphics API's
+option(SMORE_ENABLE_OPENGL "Compile with OpenGL support" ON)
 
 # ==================================
 #         SET C++ STANDARD
@@ -61,20 +70,34 @@ endif()
 #        FETCH DEPENDENCIES
 # ==================================
 
-# Set build options, for faster compilation.
-set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
-set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+if (NOT SMORE_HEADLESS)
+  # Set build options, for faster compilation.
+  set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+  set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+  set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
-# Fetch the correct version of GLWF from GitHub.
-include(FetchContent)
-FetchContent_Declare(
-  glfw                                              # Name
-  GIT_REPOSITORY https://github.com/glfw/glfw.git   # URL 
-  GIT_TAG 3.4                                       # Version
-)
+  # Fetch the correct version of GLWF from GitHub.
+  include(FetchContent)
+  FetchContent_Declare(
+  glfw                                              
+  GIT_REPOSITORY https://github.com/glfw/glfw.git   
+  GIT_TAG 3.4                                       
+  )
 
-FetchContent_MakeAvailable(glfw)
+  FetchContent_MakeAvailable(glfw)
+endif()
+
+if (SMORE_ENABLE_OPENGL)
+  FetchContent_Declare(
+        glad
+        GIT_REPOSITORY https://github.com/Dav1dde/glad.git
+        GIT_TAG        v2.0.8
+        SOURCE_SUBDIR  cmake
+    )
+    FetchContent_MakeAvailable(glad)
+
+    glad_add_library(glad API gl:core=4.6)
+endif()
 
 # ==================================
 #        ADD ENGINE MODULES
@@ -96,3 +119,10 @@ target_link_libraries(Smore INTERFACE
 
 # Create an alias for the Engine.
 add_library(Smore::Smore ALIAS Smore)
+
+# =========================
+#    SANDBOX EXECUTABLE
+# =========================
+
+add_executable(Sandbox main.cpp)
+target_link_libraries(Sandbox PRIVATE Smore::Core)

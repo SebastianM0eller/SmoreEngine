@@ -2,7 +2,7 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
-#include <Platform/HeadlessWindow.h>
+#include <Platform/Headless/HeadlessWindow.h>
 
 namespace Smore::Core {
 
