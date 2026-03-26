@@ -11,12 +11,21 @@
 namespace Smore::Core {
 
 ///
+/// A enum holding the different GraphicsAPIs.
+///
+enum class GraphicsAPI {
+    None,
+    OpenGL,
+};
+
+///
 /// A struct containing the information neccecary to create a window.
 ///
 struct WindowConfig {
     std::string title{"Smore"};
     uint32_t width{1280};
     uint32_t height{720};
+    GraphicsAPI API{GraphicsAPI::OpenGL};
 };
 
 ///
@@ -53,6 +62,11 @@ class Window {
     /// Returns the current height of the window in pixels.
     ///
     virtual uint32_t GetHeight() const noexcept = 0;
+
+    ///
+    /// Return the GraphicsAPI used to initialize the window.
+    ///
+    virtual GraphicsAPI GetAPI() const noexcept = 0;
 
     ///
     /// Enables of disables VSync.
