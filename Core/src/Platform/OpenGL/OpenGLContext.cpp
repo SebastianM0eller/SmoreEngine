@@ -28,7 +28,7 @@ void OpenGLContext::Init() {
         return;
     }
 
-    SMORE_CORE_INFO("OpenGL Context Loaded:\n       GPU Vendor: {}\n       GPU: {}\n       Version: {}",
+    SMORE_CORE_INFO("OpenGL Context Loaded:\n\tGPU Vendor: {}\n\tGPU: {}\n\tVersion: {}",
                     reinterpret_cast<const char*>(glGetString(GL_VENDOR)),
                     reinterpret_cast<const char*>(glGetString(GL_RENDERER)),
                     reinterpret_cast<const char*>(glGetString(GL_VERSION)));

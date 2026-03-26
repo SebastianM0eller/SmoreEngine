@@ -25,7 +25,7 @@ void Log::DispatchToConsole(const LogEvent& event) {
     // We print a formatted message to the console.
     out << color << "[" << name << "] "                         // Print the type of log.
         << "[" << shortPath << ": Line " << event.line << "] "  // Print the location.
-        << "\n     " << event.message                           // Print the message
+        << event.message                                        // Print the message
         << "\033[0m\n";                                         // Reset the color
 }
 
