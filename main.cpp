@@ -3,8 +3,10 @@
 // SPDX-License-Identifier: MIT
 
 #include <Core/Application.h>
+#include <Core/Logging.h>
 
 int main() {
+    SMORE_CORE_INFO("Game Starting");
     Smore::Core::ApplicationSpecification appSpec;
     appSpec.windowConfig.API = Smore::Core::GraphicsAPI::OpenGL;
 
