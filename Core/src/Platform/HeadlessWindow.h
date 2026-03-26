@@ -2,6 +2,7 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
+#pragma once
 #include <Core/Window.h>
 
 namespace Smore::Core {
@@ -18,12 +19,14 @@ class HeadlessWindow : public Window {
 
     virtual uint32_t GetWidth() const noexcept override { return m_Data.width; }
     virtual uint32_t GetHeight() const noexcept override { return m_Data.height; }
+    virtual GraphicsAPI GetAPI() const noexcept override { return m_Data.API; }
 
     virtual void SetVSync(bool enabled) noexcept override { m_Data.VSync = enabled; }
     virtual bool IsVSync() const noexcept override { return m_Data.VSync; }
 
    private:
     struct WindowData {
+        GraphicsAPI API;
         uint32_t width, height;
         bool VSync;
     } m_Data;

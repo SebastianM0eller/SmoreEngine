@@ -7,6 +7,7 @@
 namespace Smore::Core {
 
 HeadlessWindow::HeadlessWindow(const WindowConfig& config) {
+    m_Data.API = config.API;
     m_Data.height = config.width;
     m_Data.height = config.height;
     m_Data.VSync = false;  // Just assign it a default value.
