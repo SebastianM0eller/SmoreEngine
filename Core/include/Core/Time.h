@@ -7,23 +7,24 @@
 namespace Smore::Core {
 
 ///
-/// A simple class, to keep track of the time since Engine start.
+/// a simple class, to keep track of the time since engine start.
 ///
-class Time {
+class time {
    public:
     ///
-    /// Returns the time in seconds, since the Engine started.
+    /// returns the time in seconds, since the engine started.
+    /// uses steady_clock internally, so never returns a negative value.
     ///
-    static float GetTime() {
-        // We use steady_clock because it is monotonic.
+    [[nodiscard]] static inline float gettime() noexcept {
+        // we use steady_clock because it is monotonic.
         auto time = std::chrono::steady_clock::now();
 
-        std::chrono::duration<float> duration = time - s_StartTime;
+        std::chrono::duration<float> duration = time - s_starttime;
         return duration.count();
     }
 
    private:
-    static inline std::chrono::time_point<std::chrono::steady_clock> s_StartTime = std::chrono::steady_clock::now();
+    static inline std::chrono::time_point<std::chrono::steady_clock> s_starttime = std::chrono::steady_clock::now();
 };
 
 }  // namespace Smore::Core

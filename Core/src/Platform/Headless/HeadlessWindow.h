@@ -15,14 +15,14 @@ class HeadlessWindow : public Window {
     virtual void PollEvents() override { /* Doesn't do anything */ }
     virtual void SwapBuffer() noexcept override { /* Doesn't do anything */ }
 
-    virtual bool ShouldClose() const noexcept override { return false; }
+    [[nodiscard]] virtual bool ShouldClose() const noexcept override { return false; }
 
-    virtual uint32_t GetWidth() const noexcept override { return m_Data.width; }
-    virtual uint32_t GetHeight() const noexcept override { return m_Data.height; }
-    virtual GraphicsAPI GetAPI() const noexcept override { return m_Data.API; }
+    [[nodiscard]] virtual uint32_t GetWidth() const noexcept override { return m_Data.width; }
+    [[nodiscard]] virtual uint32_t GetHeight() const noexcept override { return m_Data.height; }
+    [[nodiscard]] virtual GraphicsAPI GetAPI() const noexcept override { return m_Data.API; }
 
     virtual void SetVSync(bool enabled) noexcept override { m_Data.VSync = enabled; }
-    virtual bool IsVSync() const noexcept override { return m_Data.VSync; }
+    [[nodiscard]] virtual bool IsVSync() const noexcept override { return m_Data.VSync; }
 
    private:
     struct WindowData {

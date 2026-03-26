@@ -51,22 +51,22 @@ class Window {
     /// Checks if someone/something has requested the window to close.
     /// Returns true, if the window should close.
     ///
-    virtual bool ShouldClose() const noexcept = 0;
+    [[nodiscard]] virtual bool ShouldClose() const noexcept = 0;
 
     ///
     /// Returns the current width of the window in pixels.
     ///
-    virtual uint32_t GetWidth() const noexcept = 0;
+    [[nodiscard]] virtual uint32_t GetWidth() const noexcept = 0;
 
     ///
     /// Returns the current height of the window in pixels.
     ///
-    virtual uint32_t GetHeight() const noexcept = 0;
+    [[nodiscard]] virtual uint32_t GetHeight() const noexcept = 0;
 
     ///
     /// Return the GraphicsAPI used to initialize the window.
     ///
-    virtual GraphicsAPI GetAPI() const noexcept = 0;
+    [[nodiscard]] virtual GraphicsAPI GetAPI() const noexcept = 0;
 
     ///
     /// Enables of disables VSync.
@@ -78,14 +78,14 @@ class Window {
     ///
     /// Returns true if VSync is currently enabled.
     ///
-    virtual bool IsVSync() const noexcept = 0;
+    [[nodiscard]] virtual bool IsVSync() const noexcept = 0;
 
     ///
     /// Factory methods to create the appropriate window.
     /// Constructs the window, based on the provided WindowConfig.
     /// Returns a unique_ptr to the new window.
     ///
-    static std::unique_ptr<Window> Create(const WindowConfig& config = WindowConfig());
+    [[nodiscard]] static std::unique_ptr<Window> Create(const WindowConfig& config = WindowConfig());
 };
 
 }  // namespace Smore::Core

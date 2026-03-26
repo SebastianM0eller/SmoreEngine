@@ -71,12 +71,12 @@ class Log {
     ///
     /// Retrives a const char* for the color corrosponding to the LogType. e.g. LogType::Info is Green.
     ///
-    static const char* GetColor(LogType type);
+    [[nodiscard]] static const char* GetColor(LogType type);
 
     ///
     /// Retrives a const char* for the name if the LogType. e.g. LogType::Info returns "Info".
     ///
-    static const char* GetName(LogType type);
+    [[nodiscard]] static const char* GetName(LogType type);
 };
 
 }  // namespace Smore::Core

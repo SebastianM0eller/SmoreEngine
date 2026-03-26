@@ -42,7 +42,7 @@ class Application {
     ///
     /// Retrives a reference to the global application singleton.
     ///
-    static Application& Get() noexcept;
+    [[nodiscard]] static Application& Get() noexcept;
 
    private:
     ApplicationSpecification m_Spec;
