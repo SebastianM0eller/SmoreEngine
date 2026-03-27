@@ -14,9 +14,24 @@ project(Smore
 # =========================
 
 option(SMORE_HEADLESS "Build without window and graphics support" OFF)
-
-# Graphics API's
 option(SMORE_ENABLE_OPENGL "Compile with OpenGL support" ON)
+
+# =========================
+#      SMORE CONFIG
+# =========================
+
+add_library(SmoreConfig INTERFACE)
+
+if (SMORE_ENABLE_OPENGL)
+    target_compile_definitions(SmoreConfig INTERFACE SMORE_ENABLE_OPENGL)
+endif()
+
+if (SMORE_HEADLESS)
+    target_compile_definitions(SmoreConfig INTERFACE SMORE_HEADLESS)
+endif()
+
+# to use this, link it to the module.
+# target_link_libraries(module PRIVATE SmoreConfig)
 
 # ==================================
 #         SET C++ STANDARD
@@ -47,8 +62,8 @@ else()
     )
 endif()
 
-# To use this, link it to the module.
-# target_link_libraries(module PRIVATE EngineWarnings)
+# to use this, link it to the module.
+# target_link_libraries(module PRIVATE SmoreWarnings)
 
 # ==================================
 # INTERPROCEDURAL OPTIMIZATION (LTO)
@@ -104,6 +119,7 @@ endif()
 # ==================================
 
 add_subdirectory(Core)
+add_subdirectory(Runtime)
 
 # ==================================
 #     ADD ENGINE TARGET
@@ -115,6 +131,7 @@ add_library(Smore INTERFACE)
 # Link the engine modules 
 target_link_libraries(Smore INTERFACE
   Smore::Core
+  Smore::Runtime
 )
 
 # Create an alias for the Engine.
@@ -125,4 +142,4 @@ add_library(Smore::Smore ALIAS Smore)
 # =========================
 
 add_executable(Sandbox main.cpp)
-target_link_libraries(Sandbox PRIVATE Smore::Core)
+target_link_libraries(Sandbox PRIVATE Smore::Smore)

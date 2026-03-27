@@ -2,13 +2,13 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
-#include <Core/Application.h>
 #include <Core/Logging.h>
+#include <Runtime/Application.h>
 
 int main() {
-    Smore::Core::ApplicationSpecification appSpec;
+    Smore::Runtime::ApplicationSpecification appSpec;
     appSpec.windowConfig.API = Smore::Core::GraphicsAPI::OpenGL;
 
-    Smore::Core::Application app(appSpec);
+    Smore::Runtime::Application app(appSpec);
     app.Run();
 }

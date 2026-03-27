@@ -6,13 +6,13 @@
 
 #include <Core/Window.h>
 
-namespace Smore::Core {
+namespace Smore::Runtime {
 
 ///
 /// A struct containing the specifications necessary to create an Application.
 ///
 struct ApplicationSpecification {
-    WindowConfig windowConfig;
+    Smore::Core::WindowConfig windowConfig;
     bool VSync{true};
 };
 
@@ -46,8 +46,8 @@ class Application {
 
    private:
     ApplicationSpecification m_Spec;
-    std::unique_ptr<Window> m_Window;
+    std::unique_ptr<Smore::Core::Window> m_Window;
     bool m_IsRunning;
 };
 
-}  // namespace Smore::Core
+}  // namespace Smore::Runtime

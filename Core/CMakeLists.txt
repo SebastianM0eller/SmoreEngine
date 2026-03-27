@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MIT
 
 # =========================
-#   SMORE::CORE SOURCES
+#       SMORE::CORE 
 # =========================
 
 # Set the core sources.
@@ -11,10 +11,8 @@ set(CORE_SOURCES
   include/Core/GraphicsContext.h
   include/Core/Window.h
   include/Core/Time.h
-  include/Core/Application.h
   include/Core/Logging.h
   src/Logging.cpp
-  src/Application.cpp
 )
 
 # Set the files for the platform specific implementation.
@@ -50,7 +48,6 @@ target_include_directories(SmoreCore
 )
 
 # Create the definitions.
-
 if (SMORE_ENABLE_OPENGL)
     target_compile_definitions(SmoreCore PRIVATE SMORE_ENABLE_OPENGL)
 endif()
@@ -66,5 +63,3 @@ endif()
 if (SMORE_ENABLE_OPENGL)
   target_link_libraries(SmoreCore PRIVATE glad)
 endif()
-
-# Add GLAD, if OpenGL is used.

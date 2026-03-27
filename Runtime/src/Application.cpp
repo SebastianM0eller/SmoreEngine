@@ -2,21 +2,21 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
-#include <Core/Application.h>
 #include <Core/Time.h>
+#include <Runtime/Application.h>
 
 #include <cassert>
 
 #include "Core/Logging.h"
 
-namespace Smore::Core {
+namespace Smore::Runtime {
 
 static Application* s_Application = nullptr;
 
 Application::Application(const ApplicationSpecification& appSpec) : m_Spec{appSpec} {
     s_Application = this;
 
-    m_Window = Window::Create(appSpec.windowConfig);
+    m_Window = Smore::Core::Window::Create(appSpec.windowConfig);
 
     if (!m_Window) {
         SMORE_CORE_FATAL("Application Window could not be initialized");
@@ -60,4 +60,4 @@ Application& Application::Get() noexcept {
     return *s_Application;
 }
 
-}  // namespace Smore::Core
+}  // namespace Smore::Runtime
