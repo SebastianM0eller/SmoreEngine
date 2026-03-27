@@ -8,6 +8,7 @@
 
 # Set the runtime sources.
 set(RUNTIME_SOURCES
+  include/Runtime/Layer.h
   include/Runtime/Application.h
   src/Application.cpp
 )
