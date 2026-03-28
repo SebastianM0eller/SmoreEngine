@@ -13,18 +13,7 @@ class TestLayer : public Smore::Runtime::Layer {
 };
 
 int main() {
-    SMORE_CORE_ASSERT(true, "Hello Assert");
-    Smore::Runtime::ApplicationSpecification appSpec;
-    appSpec.windowConfig.API = Smore::Core::GraphicsAPI::OpenGL;
-
-    Smore::Runtime::Application app(appSpec);
+    Smore::Runtime::Application app({});
     app.PushLayer<TestLayer>();
-    app.PopLayer<TestLayer>();
-    app.PopLayer<TestLayer>();
-    app.PushLayer<TestLayer>();
-    app.SuspendLayer<TestLayer>();
-    app.SuspendLayer<TestLayer>();
-    app.ResumeLayer<TestLayer>();
-    app.ResumeLayer<TestLayer>();
     app.Run();
 }
