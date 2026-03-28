@@ -10,6 +10,12 @@ class Layer {
    public:
     virtual ~Layer() = default;
 
+    virtual void OnAttach() {}
+    virtual void OnDetach() {}
+    virtual void OnSuspend() {}
+    virtual void OnResume() {}
+
+    // Todo: Create a DeltaTime class, and use it instead.
     virtual void OnUpdate([[maybe_unused]] const float deltaTime) {}
     virtual void OnRender() {}
 
@@ -19,6 +25,12 @@ class Layer {
     /// If an event is consumed, it will not proceed to other layers.
     ///
     virtual bool OnEvent(/* Don't have event yet */) { return false; }  // Todo: Add Events.
+
+    bool IsSuspended() const noexcept { return m_IsSuspended; }
+    void SetSuspended(bool newState) noexcept { m_IsSuspended = newState; }
+
+   private:
+    bool m_IsSuspended{false};
 };
 
 }  // namespace Smore::Runtime

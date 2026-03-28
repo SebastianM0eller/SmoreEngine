@@ -9,6 +9,8 @@
 # Set the runtime sources.
 set(RUNTIME_SOURCES
   include/Runtime/Layer.h
+  src/LayerStack.h
+  src/LayerStack.cpp
   include/Runtime/Application.h
   src/Application.cpp
 )

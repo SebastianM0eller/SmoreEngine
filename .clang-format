@@ -4,3 +4,4 @@ IndentWidth: 4
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
 AllowShortBlocksOnASingleLine: Never
+IndentRequiresClause: false
