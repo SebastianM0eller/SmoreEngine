@@ -27,6 +27,12 @@ class LayerStack {
     void SuspendLayer(const std::type_index type);
     void ResumeLayer(const std::type_index type);
 
+    [[nodiscard]] auto begin() { return m_Layers.begin(); }
+    [[nodiscard]] auto end() { return m_Layers.end(); }
+
+    [[nodiscard]] auto rbegin() { return m_Layers.rbegin(); }
+    [[nodiscard]] auto rend() { return m_Layers.rend(); }
+
    private:
     std::vector<std::unique_ptr<Layer>> m_Layers;
     uint8_t m_LayerInsertIndex;

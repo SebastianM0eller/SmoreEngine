@@ -10,8 +10,8 @@
 
 class TestLayer : public Smore::Runtime::Layer {
    public:
-    virtual ~TestLayer() override = default;
-    void OnAttach() override { std::cout << "Hello from TestLayer\n"; }
+    ~TestLayer() override = default;
+    void OnRender() override { std::cout << "Render Something\n"; }
 };
 
 int main() {
@@ -20,5 +20,12 @@ int main() {
 
     Smore::Runtime::Application app(appSpec);
     app.PushLayer<TestLayer>();
+    app.PopLayer<TestLayer>();
+    app.PopLayer<TestLayer>();
+    app.PushLayer<TestLayer>();
+    app.SuspendLayer<TestLayer>();
+    app.SuspendLayer<TestLayer>();
+    app.ResumeLayer<TestLayer>();
+    app.ResumeLayer<TestLayer>();
     app.Run();
 }

@@ -32,24 +32,30 @@ Application::~Application() { s_Application = nullptr; }
 void Application::Run() {
     m_IsRunning = true;
 
-    // float lastTime = Time::GetTime();
+    float lastTime = Smore::Core::Time::GetTime();
 
     // Main loop.
     while (m_IsRunning) {
-        // Calculate the deltaTime
-
-        /*
-        const float currentTime = Time::GetTime();
+        const float currentTime = Smore::Core::Time::GetTime();
         const float deltaTime = currentTime - lastTime;
         lastTime = currentTime;
-        */
 
         m_Window->PollEvents();
 
         if (m_Window->ShouldClose())
             Stop();
 
-        // Update...
+        for (auto& layer : *m_LayerStack) {
+            if (!layer->IsSuspended()) {
+                layer->OnUpdate(deltaTime);
+            }
+        }
+
+        for (auto& layer : *m_LayerStack) {
+            if (!layer->IsSuspended()) {
+                layer->OnRender();
+            }
+        }
 
         m_Window->SwapBuffer();
     }

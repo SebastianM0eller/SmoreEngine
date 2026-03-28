@@ -64,13 +64,13 @@ void LayerStack::PopLayer(const std::type_index type) {
 
         return;
     }
-    SMORE_CORE_INFO("Tried to pop '{}' from the LayerStack, but it wasn't in the stack", type.name());
+    SMORE_CORE_WARN("Tried to pop '{}' from the LayerStack, but it wasn't in the stack", type.name());
 }
 
 void LayerStack::SuspendLayer(const std::type_index type) {
     if (auto idx = InStack(type)) {
         if (m_Layers[idx.value()]->IsSuspended()) {
-            SMORE_CORE_INFO("Tried to suspend '{}', which was already suspended", type.name());
+            SMORE_CORE_WARN("Tried to suspend '{}', which was already suspended", type.name());
             return;
         }
 
@@ -82,13 +82,13 @@ void LayerStack::SuspendLayer(const std::type_index type) {
         return;
     }
 
-    SMORE_CORE_INFO("Tried to suspend '{}', which isn't on the stack", type.name());
+    SMORE_CORE_WARN("Tried to suspend '{}', which isn't on the stack", type.name());
 }
 
 void LayerStack::ResumeLayer(const std::type_index type) {
     if (auto idx = InStack(type)) {
         if (!m_Layers[idx.value()]->IsSuspended()) {
-            SMORE_CORE_INFO("Tried to resume '{}', which is already running", type.name());
+            SMORE_CORE_WARN("Tried to resume '{}', which is already running", type.name());
             return;
         }
 
@@ -100,7 +100,7 @@ void LayerStack::ResumeLayer(const std::type_index type) {
         return;
     }
 
-    SMORE_CORE_INFO("Tried to resume '{}', which is not on the stack", type.name());
+    SMORE_CORE_WARN("Tried to resume '{}', which is not on the stack", type.name());
 }
 
 // Implement the two other methods
