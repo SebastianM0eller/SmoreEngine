@@ -12,6 +12,7 @@ set(CORE_SOURCES
   include/Core/Window.h
   include/Core/Time.h
   include/Core/Logging.h
+  include/Core/DeltaTime.h
   src/Logging.cpp
 )
 

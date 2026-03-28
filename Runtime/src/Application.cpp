@@ -2,14 +2,11 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
+#include <Core/DeltaTime.h>
 #include <Core/Logging.h>
 #include <Core/Time.h>
 #include <LayerStack.h>
 #include <Runtime/Application.h>
-
-#include <cassert>
-#include <memory>
-#include <typeindex>
 
 namespace Smore::Runtime {
 
@@ -18,7 +15,7 @@ static Application* s_Application = nullptr;
 Application::Application(const ApplicationSpecification& appSpec) : m_Specifications{appSpec} {
     s_Application = this;
 
-    m_Window = Smore::Core::Window::Create(appSpec.windowConfig);
+    m_Window = Core::Window::Create(appSpec.windowConfig);
     if (!m_Window) {
         SMORE_CORE_FATAL("Application Window could not be initialized");
     }
@@ -32,12 +29,12 @@ Application::~Application() { s_Application = nullptr; }
 void Application::Run() {
     m_IsRunning = true;
 
-    float lastTime = Smore::Core::Time::GetTime();
+    float lastTime = Core::Time::GetTime();
 
     // Main loop.
     while (m_IsRunning) {
-        const float currentTime = Smore::Core::Time::GetTime();
-        const float deltaTime = currentTime - lastTime;
+        const float currentTime = Core::Time::GetTime();
+        const Core::DeltaTime deltaTime(currentTime - lastTime);
         lastTime = currentTime;
 
         m_Window->PollEvents();
@@ -64,7 +61,7 @@ void Application::Run() {
 void Application::Stop() noexcept { m_IsRunning = false; }
 
 Application& Application::Get() noexcept {
-    assert(s_Application && "Can't retrieve the application, if it is not initialized.");
+    SMORE_CORE_FATAL("Tried to retrieve the application, which is not initialized");
     return *s_Application;
 }
 

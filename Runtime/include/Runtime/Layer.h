@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
+#include <Core/DeltaTime.h>
 
 namespace Smore::Runtime {
 
@@ -15,8 +16,7 @@ class Layer {
     virtual void OnSuspend() {}
     virtual void OnResume() {}
 
-    // Todo: Create a DeltaTime class, and use it instead.
-    virtual void OnUpdate([[maybe_unused]] const float deltaTime) {}
+    virtual void OnUpdate([[maybe_unused]] Core::DeltaTime DeltaTime) {}
     virtual void OnRender() {}
 
     ///
@@ -24,7 +24,7 @@ class Layer {
     /// Returns true, if the event is consumed.
     /// If an event is consumed, it will not proceed to other layers.
     ///
-    virtual bool OnEvent(/* Don't have event yet */) { return false; }  // Todo: Add Events.
+    virtual bool OnEvent(/* Don't have events yet */) { return false; }  // Todo: Add Events.
 
     bool IsSuspended() const noexcept { return m_IsSuspended; }
     void SetSuspended(bool newState) noexcept { m_IsSuspended = newState; }
