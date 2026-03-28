@@ -11,17 +11,24 @@
 
 namespace Smore::Runtime {
 
+LayerStack::~LayerStack() {
+    for (auto it = m_Layers.rbegin(); it != m_Layers.rend(); it++) {
+        SMORE_CORE_INFO("Detaching and destroying '{}'", (*it)->GetName());
+        (*it)->OnDetach();
+    }
+}
+
 void LayerStack::PushLayer(std::unique_ptr<Layer> newLayer) {
     SMORE_CORE_ASSERT(newLayer, "Attempted to push a null layer")
 
     Layer& layerRef = *newLayer;
 
     if (InStack(typeid(layerRef))) {
-        SMORE_CORE_WARN("Layer '{}' already exists on the stack. Push ignored", typeid(layerRef).name());
+        SMORE_CORE_WARN("Layer '{}' already exists on the stack. Push ignored", layerRef.GetName());
         return;
     }
 
-    SMORE_CORE_INFO("Pushing '{}' to the LayerStack", typeid(layerRef).name());
+    SMORE_CORE_INFO("Pushing '{}' to the LayerStack", layerRef.GetName());
 
     newLayer->OnAttach();
     m_Layers.emplace(m_Layers.begin() + m_LayerInsertIndex, std::move(newLayer));
@@ -35,11 +42,11 @@ void LayerStack::PushOverlay(std::unique_ptr<Layer> newLayer) {
     Layer& layerRef = *newLayer;
 
     if (InStack(typeid(layerRef))) {
-        SMORE_CORE_WARN("Overlay '{}' already exists on the stack. Push ignored", typeid(layerRef).name());
+        SMORE_CORE_WARN("Overlay '{}' already exists on the stack. Push ignored", layerRef.GetName());
         return;
     }
 
-    SMORE_CORE_INFO("Pushing '{}' to the LayerStack", typeid(layerRef).name());
+    SMORE_CORE_INFO("Pushing '{}' to the LayerStack", layerRef.GetName());
 
     newLayer->OnAttach();
     m_Layers.emplace_back(std::move(newLayer));

@@ -10,6 +10,7 @@
 class TestLayer : public Smore::Runtime::Layer {
    public:
     ~TestLayer() override = default;
+    const char* GetName() const noexcept { return "TestLayer"; }
 };
 
 int main() {

@@ -17,7 +17,7 @@ namespace Smore::Runtime {
 class LayerStack {
    public:
     LayerStack() = default;
-    ~LayerStack() = default;
+    ~LayerStack();
 
     void PushLayer(std::unique_ptr<Layer> newLayer);
     void PushOverlay(std::unique_ptr<Layer> newLayer);

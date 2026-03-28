@@ -20,6 +20,12 @@ class Layer {
     virtual void OnRender() {}
 
     ///
+    /// Retrives the name of the Layer.
+    /// Used for debuging, and logging.
+    ///
+    [[nodiscard]] virtual const char* GetName() const noexcept = 0;
+
+    ///
     /// Processes the provided event.
     /// Returns true, if the event is consumed.
     /// If an event is consumed, it will not proceed to other layers.
