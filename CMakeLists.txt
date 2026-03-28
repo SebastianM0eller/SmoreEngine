@@ -13,7 +13,9 @@ project(Smore
 #      SMORE OPTIONS
 # =========================
 
-option(SMORE_HEADLESS "Build without window and graphics support" OFF)
+# Todo: This should prob be based on the CMakePreset.
+option(SMORE_HEADLESS "Compile without window and graphics support" OFF)
+option(SMORE_ENABLE_ASSERTS "Compile with asserts" ON)
 option(SMORE_ENABLE_OPENGL "Compile with OpenGL support" ON)
 
 # =========================
@@ -28,6 +30,22 @@ endif()
 
 if (SMORE_HEADLESS)
     target_compile_definitions(SmoreConfig INTERFACE SMORE_HEADLESS)
+endif()
+
+if (SMORE_ENABLE_ASSERTS)
+  target_compile_definitions(SmoreConfig INTERFACE SMORE_ENABLE_ASSERTS)
+endif()
+
+if(WIN32)
+    target_compile_definitions(SmoreConfig INTERFACE SMORE_PLATFORM_WINDOWS)
+
+elseif(APPLE) 
+  message(FATAL_ERROR "Smore Error: 
+  Apple/macOS is not currently supported. 
+  Please use Windows or Linux for now.)")
+
+elseif(UNIX)
+    target_compile_definitions(SmoreConfig INTERFACE SMORE_PLATFORM_LINUX)
 endif()
 
 # to use this, link it to the module.

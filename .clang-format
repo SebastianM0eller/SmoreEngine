@@ -5,3 +5,4 @@ AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
 AllowShortBlocksOnASingleLine: Never
 IndentRequiresClause: false
+IndentPPDirectives: AfterHash

@@ -12,6 +12,7 @@ set(CORE_SOURCES
   include/Core/Window.h
   include/Core/Time.h
   include/Core/Logging.h
+  include/Core/Assert.h
   include/Core/DeltaTime.h
   src/Logging.cpp
 )
@@ -54,7 +55,11 @@ if (SMORE_ENABLE_OPENGL)
 endif()
 
 # Set the compiler warnings.
-target_link_libraries(SmoreCore PRIVATE SmoreWarnings)
+target_link_libraries(SmoreCore 
+  PUBLIC
+  SmoreConfig
+  PRIVATE 
+  SmoreWarnings)
 
 # Add the dependencies.
 if (NOT SMORE_HEADLESS)

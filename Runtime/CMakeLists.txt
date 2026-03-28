@@ -28,6 +28,8 @@ PRIVATE
 
 # Set the compiler warnings, and link the libraries.
 target_link_libraries(SmoreRuntime 
+  PUBLIC 
+  SmoreConfig
   PRIVATE 
   Smore::Core
   SmoreWarnings

@@ -2,22 +2,17 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
+#include <Core/Assert.h>
 #include <LayerStack.h>
 
 #include <cstddef>
 #include <optional>
 #include <typeindex>
 
-#include "Core/Logging.h"
-#include "Runtime/Layer.h"
-
 namespace Smore::Runtime {
 
 void LayerStack::PushLayer(std::unique_ptr<Layer> newLayer) {
-    if (!newLayer) {
-        SMORE_CORE_WARN("Attempted to push a null layer");  // Todo: Change it to assert.
-        return;
-    }
+    SMORE_CORE_ASSERT(newLayer, "Attempted to push a null layer")
 
     Layer& layerRef = *newLayer;
 
@@ -34,10 +29,8 @@ void LayerStack::PushLayer(std::unique_ptr<Layer> newLayer) {
 }
 
 void LayerStack::PushOverlay(std::unique_ptr<Layer> newLayer) {
-    if (!newLayer) {
-        SMORE_CORE_WARN("Attempted to push a null layer");  // Todo: Change it to assert.
-        return;
-    }
+    SMORE_CORE_ASSERT(newLayer, "Attemped to push a null layer")
+    return;
 
     Layer& layerRef = *newLayer;
 

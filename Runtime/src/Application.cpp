@@ -13,6 +13,8 @@ namespace Smore::Runtime {
 static Application* s_Application = nullptr;
 
 Application::Application(const ApplicationSpecification& appSpec) : m_Specifications{appSpec} {
+    SMORE_CORE_INFO("Application starting");
+
     s_Application = this;
 
     m_Window = Core::Window::Create(appSpec.windowConfig);
