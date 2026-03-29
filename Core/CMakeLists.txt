@@ -16,6 +16,7 @@ set(CORE_SOURCES
   include/Core/DeltaTime.h
   include/Core/Defines.h
   include/Core/Events/Event.h
+  include/Core/Events/EventDispatcher.h
   src/Logging.cpp
 )
 
