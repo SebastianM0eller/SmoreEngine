@@ -1,2 +1,0 @@
-Implement the LayerStack, and add a templated in the Application, to abstract it.
-Just make the stack a unique ptr, and pass it to a private method, to avoid exposing the LayerStack.
