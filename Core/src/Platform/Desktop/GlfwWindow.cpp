@@ -3,16 +3,22 @@
 // SPDX-License-Identifier: MIT
 
 #include <Core/Logging.h>
-#include <GLFW/glfw3.h>
 #include <Platform/Desktop/GlfwWindow.h>
 
+#include "Core/Assert.h"
+#include "GLFW/glfw3.h"
+
 #ifdef SMORE_ENABLE_OPENGL
-#include <Platform/OpenGL/OpenGLContext.h>
+#    include <Platform/OpenGL/OpenGLContext.h>
 #endif
 
 namespace Smore::Core {
 
 static uint8_t s_GlfwWindowCount = 0;
+
+static void GLFWErrorCallback(int error, const char* description) {
+    SMORE_CORE_ERROR("GLFW Error ({})_ {}", error, description);
+}
 
 GlfwWindow::GlfwWindow(const WindowConfig& config) {
     m_Data.API = config.API;
@@ -22,25 +28,20 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
 
     // If we have no windows alive, we need to initialize GLFW.
     if (s_GlfwWindowCount == 0) {
-        if (!glfwInit()) {
-            // Todo: Get the error
-            SMORE_CORE_FATAL("GLFW Failed to initalize");
-            return;
-        }
+        glfwSetErrorCallback(GLFWErrorCallback);
 
+        SMORE_CORE_ASSERT(glfwInit(), "GLFW Failed to initialize. Aborting startup");
         SMORE_CORE_INFO("GLFW was Initialized");
     }
 
     // We configure GLFW based on the API we want.
     switch (m_Data.API) {
 #ifdef SMORE_ENABLE_OPENGL
-
         case GraphicsAPI::OpenGL:
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
             glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
             glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
             break;
-
 #endif
 
         case GraphicsAPI::None:
@@ -48,23 +49,24 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
             break;
 
         default:
-            SMORE_CORE_FATAL("Failed to find a valid API");
             if (s_GlfwWindowCount == 0) {
                 glfwTerminate();
-                SMORE_CORE_INFO("GLFW Was Terminated");
+                SMORE_CORE_FATAL("Failed to find a valid API for the primary window! Aborting startup!");
+                SMORE_DEBUGBREAK();
             }
+            SMORE_CORE_ERROR("Failed to find a valid API");
             return;
     }
 
     m_Window = glfwCreateWindow(m_Data.width, m_Data.height, config.title.c_str(), NULL, NULL);
 
     if (!m_Window) {
-        // Todo: Retrieve the error.
-        SMORE_CORE_FATAL("Failed to create GLFWwindow");
         if (s_GlfwWindowCount == 0) {
             glfwTerminate();
-            SMORE_CORE_INFO("GLFW Was Terminated");
+            SMORE_CORE_FATAL("Failed to create the primary window! Aborting startup!");
+            SMORE_DEBUGBREAK();
         }
+        SMORE_CORE_ERROR("Failed to create GLFWwindow");
         return;
     }
 
