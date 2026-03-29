@@ -3,20 +3,8 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
+#include <Core/Defines.h>
 #include <Core/Logging.h>
-
-/// ================= ///
-/// SMORE DEBUG BREAK ///
-/// ================= ///
-
-#if defined(SMORE_PLATFORM_WINDOWS)
-#    define SMORE_DEBUGBREAK() __debugbreak()
-#elif defined(SMORE_PLATFORM_LINUX)
-#    include <signal.h>
-#    define SMORE_DEBUGBREAK() raise(SIGTRAP)
-#else
-#    define SMORE_DEBUGBREAK() /* Does Nothing */
-#endif
 
 /// ============= ///
 /// SMORE ASSERTS ///

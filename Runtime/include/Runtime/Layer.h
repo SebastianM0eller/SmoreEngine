@@ -4,6 +4,7 @@
 
 #pragma once
 #include <Core/DeltaTime.h>
+#include <Core/Events/Event.h>
 
 namespace Smore::Runtime {
 
@@ -27,10 +28,10 @@ class Layer {
 
     ///
     /// Processes the provided event.
-    /// Returns true, if the event is consumed.
-    /// If an event is consumed, it will not proceed to other layers.
+    /// Mark the internal handled flag true, if the event is consumed.
+    /// If an event is consumed, it will not proceed to deeper layers.
     ///
-    virtual bool OnEvent(/* Don't have events yet */) { return false; }  // Todo: Add Events.
+    virtual void OnEvent([[maybe_unused]] Smore::Core::Event& event) {}
 
     bool IsSuspended() const noexcept { return m_IsSuspended; }
     void SetSuspended(bool newState) noexcept { m_IsSuspended = newState; }

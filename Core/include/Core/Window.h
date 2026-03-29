@@ -4,7 +4,10 @@
 
 #pragma once
 
+#include <Core/Events/Event.h>
+
 #include <cstdint>
+#include <functional>
 #include <memory>
 #include <string>
 
@@ -67,6 +70,13 @@ class Window {
     /// Return the GraphicsAPI used to initialize the window.
     ///
     [[nodiscard]] virtual GraphicsAPI GetAPI() const noexcept = 0;
+
+    ///
+    /// Sets the callback for the window events.
+    /// Only one callback can be registered at a time.
+    /// The Smore::Events from the window is forwarded to the registered callback.
+    ///
+    virtual void SetEventCallback(const std::function<void(Event&)>& callback) noexcept = 0;
 
     ///
     /// Enables of disables VSync.

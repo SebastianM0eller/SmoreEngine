@@ -14,6 +14,8 @@ set(CORE_SOURCES
   include/Core/Logging.h
   include/Core/Assert.h
   include/Core/DeltaTime.h
+  include/Core/Defines.h
+  include/Core/Events/Event.h
   src/Logging.cpp
 )
 
