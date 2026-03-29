@@ -55,7 +55,7 @@ const char* Log::GetName(LogType type) {
         case LogType::Warning:
             return "Warning";
         case LogType::Error:
-            return "Errro";
+            return "Error";
         case LogType::Fatal:
             return "Fatal";
         default:
