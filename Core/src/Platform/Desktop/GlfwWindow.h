@@ -16,8 +16,6 @@ class GlfwWindow : public Window {
     virtual void PollEvents() override;
     virtual void SwapBuffer() noexcept override;
 
-    [[nodiscard]] virtual bool ShouldClose() const noexcept override;
-
     [[nodiscard]] virtual uint32_t GetWidth() const noexcept override { return m_Data.width; }
     [[nodiscard]] virtual uint32_t GetHeight() const noexcept override { return m_Data.height; }
     [[nodiscard]] virtual GraphicsAPI GetAPI() const noexcept override { return m_Data.API; }

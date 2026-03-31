@@ -2,11 +2,16 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
+#include <Core/Defines.h>
 #include <Core/DeltaTime.h>
+#include <Core/Events/EventDispatcher.h>
+#include <Core/Events/WindowEvents.h>
 #include <Core/Logging.h>
 #include <Core/Time.h>
 #include <LayerStack.h>
 #include <Runtime/Application.h>
+
+#include "Core/Assert.h"
 
 namespace Smore::Runtime {
 
@@ -20,8 +25,10 @@ Application::Application(const ApplicationSpecification& appSpec) : m_Specificat
     m_Window = Core::Window::Create(appSpec.windowConfig);
     if (!m_Window) {
         SMORE_CORE_FATAL("Application Window could not be initialized");
+        SMORE_DEBUGBREAK();
     }
     m_Window->SetVSync(appSpec.VSync);
+    m_Window->SetEventCallback(SMORE_BIND_FN(OnEvent));
 
     m_LayerStack = std::make_unique<Smore::Runtime::LayerStack>();
 }
@@ -41,9 +48,6 @@ void Application::Run() {
 
         m_Window->PollEvents();
 
-        if (m_Window->ShouldClose())
-            Stop();
-
         for (auto& layer : *m_LayerStack) {
             if (!layer->IsSuspended()) {
                 layer->OnUpdate(deltaTime);
@@ -60,7 +64,31 @@ void Application::Run() {
     }
 }
 
-void Application::Stop() noexcept { m_IsRunning = false; }
+void Application::OnEvent(Smore::Core::Event& event) {
+    SMORE_CORE_ASSERT(!event.Handled, "Event '{}' arrived at Application, already handled.", event.GetName())
+
+    for (auto& layer : *m_LayerStack) {
+        layer->OnEvent(event);
+        if (event.Handled)
+            break;
+    }
+
+    Smore::Core::EventDispatcher dispatcher(event);
+
+    dispatcher.Dispatch<Smore::Core::WindowCloseEvent>(SMORE_BIND_FN(OnWindowClose));
+    dispatcher.Dispatch<Smore::Core::WindowResizeEvent>(SMORE_BIND_FN(OnWindowResize));
+}
+
+bool Application::OnWindowClose(Smore::Core::WindowCloseEvent&) noexcept {
+    // Todo: Forward the event to the applicable systems.
+    m_IsRunning = false;
+    return true;
+}
+
+bool Application::OnWindowResize(Smore::Core::WindowResizeEvent&) noexcept {
+    // Todo: Forward the event to the applicable system: e.g. renderer.
+    return false;
+}
 
 Application& Application::Get() noexcept {
     SMORE_CORE_FATAL("Tried to retrieve the application, which is not initialized");

@@ -4,8 +4,13 @@
 
 #include <Core/Assert.h>
 #include <Core/Defines.h>
+#include <Core/Events/WindowEvents.h>
 #include <Core/Logging.h>
 #include <Platform/Desktop/GlfwWindow.h>
+
+#include <cstdint>
+
+#include "GLFW/glfw3.h"
 
 #ifdef SMORE_ENABLE_OPENGL
 #    include <Platform/OpenGL/OpenGLContext.h>
@@ -13,13 +18,25 @@
 
 namespace Smore::Core {
 
-static uint8_t s_GlfwWindowCount = 0;
+/// =========================================
+///           GLFW ERRORCALLBACK
+/// =========================================
 
 static void GLFWErrorCallback(int error, const char* description) {
     SMORE_CORE_ERROR("GLFW Error ({})_ {}", error, description);
 }
 
+/// =========================================
+///          WINDOW INITIALIZATION
+/// =========================================
+
+static uint8_t s_GlfwWindowCount = 0;
+
 GlfwWindow::GlfwWindow(const WindowConfig& config) {
+    //
+    // We start by setting the internal data for the window.
+    // If it is necessary, we also initialize GLFW.
+    //
     m_Data.API = config.API;
     m_Data.width = config.width;
     m_Data.height = config.height;
@@ -36,7 +53,10 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
         SMORE_CORE_INFO("GLFW was Initialized");
     }
 
-    // We configure GLFW based on the API we want.
+    //
+    // We then set the config for the window, based on the GraphicsAPI.
+    // This is required, to to OPENGL being a spoiled brat.
+    //
     switch (m_Data.API) {
 #ifdef SMORE_ENABLE_OPENGL
         case GraphicsAPI::OpenGL:
@@ -60,6 +80,10 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
             return;
     }
 
+    //
+    // We then initialize the GLFWwindow and set it's custom userdata.
+    // We need the internal data, for the callback later.
+    //
     m_Window = glfwCreateWindow(m_Data.width, m_Data.height, config.title.c_str(), NULL, NULL);
 
     if (!m_Window) {
@@ -75,10 +99,34 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
     s_GlfwWindowCount++;
     SMORE_CORE_INFO("GlfwWindow was Created: '{}', {}x{}", config.title, m_Data.width, m_Data.height);
 
-    // We attach the data to the window.
     glfwSetWindowUserPointer(m_Window, &m_Data);
 
-    // We now create the context.
+    //
+    // We then configure the event callback for GLFW.
+    // This is how out application, communicates with the OS.
+    //
+
+    // WindowCloseEvent
+    glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+        WindowCloseEvent event;
+        data.eventCallBack(event);
+    });
+
+    // WindowResizeEvent
+    glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+        data.width = width;
+        data.height = height;
+
+        WindowResizeEvent event(width, height);
+        data.eventCallBack(event);
+    });
+
+    //
+    //
+    //
     switch (m_Data.API) {
 #ifdef SMORE_ENABLE_OPENGL
         case GraphicsAPI::OpenGL:
@@ -98,6 +146,10 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
         m_Context->Init();
     }
 }
+
+/// =========================================
+///          WINDOW IMPLEMENTATION
+/// =========================================
 
 GlfwWindow::~GlfwWindow() {
     if (m_Window) {
@@ -120,8 +172,6 @@ void GlfwWindow::SwapBuffer() noexcept {
         m_Context->SwapBuffer();
     }
 }
-
-bool GlfwWindow::ShouldClose() const noexcept { return glfwWindowShouldClose(m_Window); }
 
 void GlfwWindow::SetEventCallback(const std::function<void(Event&)>& callback) noexcept {
     m_Data.eventCallBack = callback;

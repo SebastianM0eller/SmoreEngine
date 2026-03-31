@@ -15,8 +15,6 @@ class HeadlessWindow : public Window {
     virtual void PollEvents() override { /* Doesn't do anything */ }
     virtual void SwapBuffer() noexcept override { /* Doesn't do anything */ }
 
-    [[nodiscard]] virtual bool ShouldClose() const noexcept override { return false; }
-
     [[nodiscard]] virtual uint32_t GetWidth() const noexcept override { return m_Data.width; }
     [[nodiscard]] virtual uint32_t GetHeight() const noexcept override { return m_Data.height; }
     [[nodiscard]] virtual GraphicsAPI GetAPI() const noexcept override { return m_Data.API; }

@@ -51,12 +51,6 @@ class Window {
     virtual void SwapBuffer() noexcept = 0;
 
     ///
-    /// Checks if someone/something has requested the window to close.
-    /// Returns true, if the window should close.
-    ///
-    [[nodiscard]] virtual bool ShouldClose() const noexcept = 0;
-
-    ///
     /// Returns the current width of the window in pixels.
     ///
     [[nodiscard]] virtual uint32_t GetWidth() const noexcept = 0;

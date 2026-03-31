@@ -4,12 +4,15 @@
 
 #pragma once
 
+#include <Core/Events/Event.h>
 #include <Core/Window.h>
 #include <Runtime/Layer.h>
 
 #include <concepts>
 #include <memory>
 #include <typeindex>
+
+#include "Core/Events/WindowEvents.h"
 
 namespace Smore::Runtime {
 
@@ -42,9 +45,19 @@ class Application {
     void Run();
 
     ///
+    /// Dispatched the events to the appropriate methods.
+    ///
+    void OnEvent(Smore::Core::Event& event);
+
+    ///
     /// Signals that the application should shutdown, at the end of the current frame.
     ///
-    void Stop() noexcept;
+    bool OnWindowClose(Smore::Core::WindowCloseEvent& event) noexcept;
+
+    ///
+    /// Forwards the event, to the appropriate systems, managed by the application.
+    ///
+    bool OnWindowResize(Smore::Core::WindowResizeEvent& event) noexcept;
 
     ///
     /// Creates a Layer of the specified type, and pushes it to the internal LayerStack.
