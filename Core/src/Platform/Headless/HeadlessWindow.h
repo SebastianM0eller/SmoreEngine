@@ -21,6 +21,8 @@ class HeadlessWindow : public Window {
     [[nodiscard]] virtual uint32_t GetHeight() const noexcept override { return m_Data.height; }
     [[nodiscard]] virtual GraphicsAPI GetAPI() const noexcept override { return m_Data.API; }
 
+    virtual void SetEventCallback(const std::function<void(Event&)>&) noexcept override { /* Do Nothing */ }
+
     virtual void SetVSync(bool enabled) noexcept override { m_Data.VSync = enabled; }
     [[nodiscard]] virtual bool IsVSync() const noexcept override { return m_Data.VSync; }
 

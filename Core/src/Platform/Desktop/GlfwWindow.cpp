@@ -2,11 +2,10 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
+#include <Core/Assert.h>
+#include <Core/Defines.h>
 #include <Core/Logging.h>
 #include <Platform/Desktop/GlfwWindow.h>
-
-#include "Core/Assert.h"
-#include "GLFW/glfw3.h"
 
 #ifdef SMORE_ENABLE_OPENGL
 #    include <Platform/OpenGL/OpenGLContext.h>
@@ -30,7 +29,10 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
     if (s_GlfwWindowCount == 0) {
         glfwSetErrorCallback(GLFWErrorCallback);
 
-        SMORE_CORE_ASSERT(glfwInit(), "GLFW Failed to initialize. Aborting startup");
+        if (!glfwInit()) {
+            SMORE_CORE_FATAL("GlFW Failed to initialize. Aborting startup!");
+            SMORE_DEBUGBREAK();
+        }
         SMORE_CORE_INFO("GLFW was Initialized");
     }
 
@@ -72,6 +74,9 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
 
     s_GlfwWindowCount++;
     SMORE_CORE_INFO("GlfwWindow was Created: '{}', {}x{}", config.title, m_Data.width, m_Data.height);
+
+    // We attach the data to the window.
+    glfwSetWindowUserPointer(m_Window, &m_Data);
 
     // We now create the context.
     switch (m_Data.API) {
@@ -117,6 +122,10 @@ void GlfwWindow::SwapBuffer() noexcept {
 }
 
 bool GlfwWindow::ShouldClose() const noexcept { return glfwWindowShouldClose(m_Window); }
+
+void GlfwWindow::SetEventCallback(const std::function<void(Event&)>& callback) noexcept {
+    m_Data.eventCallBack = callback;
+}
 
 void GlfwWindow::SetVSync(bool enabled) noexcept {
     m_Data.VSync = enabled;

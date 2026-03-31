@@ -60,7 +60,6 @@ class Log {
 
     // Todo: Add deferred logging, for better performance.
     // Todo: Add logging output to a file.
-    // Todo: Add a similar thing for assert(). SMORE_CORE_ASSERT(). I could use the logger.
 
    private:
     ///
@@ -83,13 +82,13 @@ class Log {
 
 // Macros for Engine logging.
 #ifdef SMORE_RELEASE
-#define SMORE_CORE_DEBUG(...)
-#define SMORE_CORE_INFO(...)
+#    define SMORE_CORE_DEBUG(...)
+#    define SMORE_CORE_INFO(...)
 #else
-#define SMORE_CORE_DEBUG(...) \
-    Smore::Core::Log::Message(Smore::Core::LogType::Debug, std::source_location::current(), __VA_ARGS__)
-#define SMORE_CORE_INFO(...) \
-    Smore::Core::Log::Message(Smore::Core::LogType::Info, std::source_location::current(), __VA_ARGS__)
+#    define SMORE_CORE_DEBUG(...) \
+        Smore::Core::Log::Message(Smore::Core::LogType::Debug, std::source_location::current(), __VA_ARGS__)
+#    define SMORE_CORE_INFO(...) \
+        Smore::Core::Log::Message(Smore::Core::LogType::Info, std::source_location::current(), __VA_ARGS__)
 #endif
 
 #define SMORE_CORE_WARN(...) \

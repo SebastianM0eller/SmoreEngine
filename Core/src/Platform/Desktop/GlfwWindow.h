@@ -22,6 +22,8 @@ class GlfwWindow : public Window {
     [[nodiscard]] virtual uint32_t GetHeight() const noexcept override { return m_Data.height; }
     [[nodiscard]] virtual GraphicsAPI GetAPI() const noexcept override { return m_Data.API; }
 
+    virtual void SetEventCallback(const std::function<void(Event&)>&) noexcept override;
+
     virtual void SetVSync(bool enabled) noexcept override;
     [[nodiscard]] virtual bool IsVSync() const noexcept override { return m_Data.VSync; }
 
@@ -30,6 +32,8 @@ class GlfwWindow : public Window {
         GraphicsAPI API;
         uint32_t width, height;
         bool VSync;
+
+        std::function<void(Event&)> eventCallBack;
     } m_Data;
 
     GLFWwindow* m_Window;

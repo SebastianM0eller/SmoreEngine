@@ -8,13 +8,13 @@
 #include <string>
 
 // Macros for automating the required virtual methods.
-#define EVENT_CLASS_TYPE(type)                                                  \
-    static EventType GetStaticType() { return EventType::type; }                \
-    virtual EventType GetEventType() const override { return GetStaticType(); } \
-    virtual const char* GetName() const override { return #type; }
+#define EVENT_CLASS_TYPE(type)                                                           \
+    static EventType GetStaticType() noexcept { return EventType::type; }                \
+    virtual EventType GetEventType() const noexcept override { return GetStaticType(); } \
+    virtual const char* GetName() const noexcept override { return #type; }
 
 #define EVENT_CLASS_CATEGORY(category) \
-    virtual int GetCategoryFlags() const override { return static_cast<int>(category); }
+    virtual uint32_t GetCategory() const noexcept override { return static_cast<uint32_t>(EventCategory::category); }
 
 namespace Smore::Core {
 
@@ -42,11 +42,9 @@ enum class EventType {
 ///
 enum class EventCategory {
     None = 0,
-    Window = SMORE_BIT(1),
-    Input = SMORE_BIT(2),
-    Keyboard = SMORE_BIT(3),
-    Mouse = SMORE_BIT(4),
-    MouseButton = SMORE_BIT(5),
+    Window = SMORE_BIT(0),
+    Keyboard = SMORE_BIT(1),
+    Mouse = SMORE_BIT(2),
 };
 
 ///
