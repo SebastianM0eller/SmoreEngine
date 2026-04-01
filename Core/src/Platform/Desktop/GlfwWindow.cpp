@@ -4,13 +4,12 @@
 
 #include <Core/Assert.h>
 #include <Core/Defines.h>
+#include <Core/Events/KeyboardEvents.h>
 #include <Core/Events/WindowEvents.h>
 #include <Core/Logging.h>
 #include <Platform/Desktop/GlfwWindow.h>
 
 #include <cstdint>
-
-#include "GLFW/glfw3.h"
 
 #ifdef SMORE_ENABLE_OPENGL
 #    include <Platform/OpenGL/OpenGLContext.h>
@@ -122,6 +121,29 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
 
         WindowResizeEvent event(width, height);
         data.eventCallBack(event);
+    });
+
+    // KeyboardInputEvents
+    glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int, int action, int mods) {
+        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+        switch (action) {
+            case GLFW_PRESS: {
+                KeyPressedEvent event(static_cast<KeyCode>(key), static_cast<KeyMods>(mods), false);
+                data.eventCallBack(event);
+                break;
+            }
+            case GLFW_REPEAT: {
+                KeyPressedEvent event(static_cast<KeyCode>(key), static_cast<KeyMods>(mods), true);
+                data.eventCallBack(event);
+                break;
+            }
+            case GLFW_RELEASE: {
+                KeyReleasedEvent event(static_cast<KeyCode>(key));
+                data.eventCallBack(event);
+                break;
+            }
+        }
     });
 
     //

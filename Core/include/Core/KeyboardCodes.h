@@ -5,6 +5,8 @@
 #pragma once
 #include <cstdint>
 
+#include "Core/Defines.h"
+
 namespace Smore::Core {
 
 ///
@@ -12,7 +14,7 @@ namespace Smore::Core {
 /// The values are mapped from GLFW's internal key codes, from glfw3.h
 ///
 enum class KeyCode : uint16_t {
-    /// From glfw.h
+    // From glfw.h
     SPACE = 32,
     APOSTROPHE = 39,
     COMMA = 44,
@@ -134,6 +136,21 @@ enum class KeyCode : uint16_t {
     RIGHT_ALT = 346,
     RIGHT_SUPER = 347,
     MENU = 348
+};
+
+///
+/// Engine specific mods input codes.
+/// The values are mapped from GLFW's internal mods codes, from glfw3.h
+/// We use regular enums, to allow for bitwise operators.
+///
+enum KeyMods : uint8_t {
+    // From glfw3.h
+    SHIFT = SMORE_BIT(0),
+    CONTROL = SMORE_BIT(1),
+    ALT = SMORE_BIT(2),
+    SUPER = SMORE_BIT(3),
+    CAPS = SMORE_BIT(4),
+    NUM_LOCK = SMORE_BIT(5)
 };
 
 }  // namespace Smore::Core
