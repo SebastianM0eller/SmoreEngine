@@ -18,6 +18,7 @@ set(CORE_SOURCES
   include/Core/Events/Event.h
   include/Core/Events/EventDispatcher.h
   include/Core/Events/WindowEvents.h
+  include/Core/Events/KeyboardEvents.h
   src/Logging.cpp
 )
 

@@ -1,0 +1,39 @@
+// Smore - A Game Engine Project.
+// Copyright (c) 2026 Sebastian. All rights reserved.
+// SPDX-License-Identifier: MIT
+
+#pragma once
+#include <Core/Events/Event.h>
+#include <Core/KeyboardCodes.h>
+
+namespace Smore::Core {
+
+class KeyPressedEvent : public Event {
+   public:
+    KeyPressedEvent(KeyCode key, bool repeat) noexcept : m_Key(key), m_Repeat(repeat) {}
+
+    KeyCode GetKey() const noexcept { return m_Key; }
+    bool GetRepeat() const noexcept { return m_Repeat; }
+
+    EVENT_CLASS_TYPE(KeyPressed);
+    EVENT_CLASS_CATEGORY(Keyboard);
+
+   private:
+    KeyCode m_Key;
+    bool m_Repeat;
+};
+
+class KeyReleasedEvent : public Event {
+   public:
+    KeyReleasedEvent(KeyCode key) noexcept : m_Key(key) {}
+
+    KeyCode GetKey() const noexcept { return m_Key; }
+
+    EVENT_CLASS_TYPE(KeyReleased);
+    EVENT_CLASS_CATEGORY(Keyboard);
+
+   private:
+    KeyCode m_Key;
+};
+
+}  // namespace Smore::Core
