@@ -11,11 +11,13 @@
 
 #include <iostream>
 
+#include "Core/Input/MouseCodes.h"
+
 class TestLayer : public Smore::Runtime::Layer {
    public:
     ~TestLayer() override = default;
     void OnEvent(Smore::Core::Event& event) override {
-        std::cout << Smore::Core::Input::IsKeyPressed(Smore::Core::KeyCode::SPACE);
+        std::cout << Smore::Core::Input::IsButtonPressed(Smore::Core::MouseCode::LEFT_BUTTON);
     }
     const char* GetName() const noexcept override { return "TestLayer"; }
 };

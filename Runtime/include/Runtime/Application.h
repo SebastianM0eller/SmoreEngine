@@ -13,6 +13,7 @@
 #include <typeindex>
 
 #include "Core/Events/KeyboardEvents.h"
+#include "Core/Events/MouseEvents.h"
 #include "Core/Events/WindowEvents.h"
 
 namespace Smore::Runtime {
@@ -46,7 +47,7 @@ class Application {
     void Run();
 
     ///
-    /// Dispatched the events to the appropriate methods.
+    /// Dispatched the events through the layerstack, and to the appropriate methods if the event is not used.
     ///
     void OnEvent(Smore::Core::Event& event);
 
@@ -76,12 +77,21 @@ class Application {
     bool OnKeyReleased(Smore::Core::KeyReleasedEvent& event) noexcept;
 
     ///
+    /// Forwards the event, to the appropriate systems.
+    ///
+    bool OnMouseButtonPressed(Smore::Core::MouseButtonPressedEvent& event) noexcept;
+
+    ///
+    /// Forwards the event, to the appropriate systems.
+    ///
+    bool OnMouseButtonReleased(Smore::Core::MouseButtonReleasedEvent& event) noexcept;
+
+    ///
     /// Creates a Layer of the specified type, and pushes it to the internal LayerStack.
     /// Also takes optional arguments Args, for the construction of the Layer.
-    /// There can ever only be one layer, of the same type on the stack. If a layer of the same time is on the stack,
-    /// the new layer will not be pushed.
-    /// The new layer will be placed before the overlays, but after the other layers.
-    /// When attached, the layers OnAttach method will be called.
+    /// There can ever only be one layer, of the same type on the stack. If a layer of the same time is on the
+    /// stack, the new layer will not be pushed. The new layer will be placed before the overlays, but after the
+    /// other layers. When attached, the layers OnAttach method will be called.
     ///
     template <typename LayerType, typename... Args>
     requires(std::derived_from<LayerType, Layer>)

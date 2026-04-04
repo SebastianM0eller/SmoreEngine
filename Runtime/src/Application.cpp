@@ -13,6 +13,7 @@
 
 #include "Core/Assert.h"
 #include "Core/Events/KeyboardEvents.h"
+#include "Core/Events/MouseEvents.h"
 #include "Core/Input/Input.h"
 
 namespace Smore::Runtime {
@@ -84,6 +85,8 @@ void Application::OnEvent(Smore::Core::Event& event) {
     dispatcher.Dispatch<Smore::Core::WindowFocusEvent>(SMORE_BIND_FN(OnWindowFocus));
     dispatcher.Dispatch<Smore::Core::KeyPressedEvent>(SMORE_BIND_FN(OnKeyPressed));
     dispatcher.Dispatch<Smore::Core::KeyReleasedEvent>(SMORE_BIND_FN(OnKeyReleased));
+    dispatcher.Dispatch<Smore::Core::MouseButtonPressedEvent>(SMORE_BIND_FN(OnMouseButtonPressed));
+    dispatcher.Dispatch<Smore::Core::MouseButtonReleasedEvent>(SMORE_BIND_FN(OnMouseButtonReleased));
 }
 
 bool Application::OnWindowClose(Smore::Core::WindowCloseEvent&) noexcept {
@@ -116,6 +119,16 @@ bool Application::OnKeyPressed(Smore::Core::KeyPressedEvent& event) noexcept {
 
 bool Application::OnKeyReleased(Smore::Core::KeyReleasedEvent& event) noexcept {
     Smore::Core::Input::UpdateKey(event.GetKey(), false);
+    return true;
+}
+
+bool Application::OnMouseButtonPressed(Smore::Core::MouseButtonPressedEvent& event) noexcept {
+    Smore::Core::Input::UpdateButton(event.GetCode(), true);
+    return true;
+}
+
+bool Application::OnMouseButtonReleased(Smore::Core::MouseButtonReleasedEvent& event) noexcept {
+    Smore::Core::Input::UpdateButton(event.GetCode(), false);
     return true;
 }
 

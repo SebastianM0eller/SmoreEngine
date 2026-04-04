@@ -2,23 +2,29 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
+#include <Core/Assert.h>
 #include <Core/Input/Input.h>
 #include <Core/Input/KeyboardCodes.h>
+#include <Core/Input/MouseCodes.h>
 #include <Core/Window.h>
 #include <GLFW/glfw3.h>
 
 #include <bitset>
 #include <cstdint>
 
-#include "Core/Assert.h"
-
 namespace Smore::Core {
 
 constexpr uint16_t MaxKeyCode = static_cast<uint16_t>(KeyCode::MAX_CODE);
-constexpr uint16_t StartkeyCode = static_cast<uint16_t>(KeyCode::SPACE);
+constexpr uint16_t StartKeyCode = static_cast<uint16_t>(KeyCode::SPACE);
 
-static std::bitset<MaxKeyCode> s_CurrentState;
-static std::bitset<MaxKeyCode> s_PreviousState;
+static std::bitset<MaxKeyCode> s_CurrentKeyState;
+static std::bitset<MaxKeyCode> s_PreviousKeyState;
+
+constexpr uint16_t MaxButtonCode = static_cast<uint16_t>(MouseCode::MAX_CODE);
+constexpr uint16_t StartButtonCode = static_cast<uint16_t>(MouseCode::LEFT_BUTTON);
+
+static std::bitset<MaxButtonCode> s_CurrentButtonState;
+static std::bitset<MaxButtonCode> s_PreviousButtonState;
 
 static GLFWwindow* s_WindowHandle;
 
@@ -29,36 +35,57 @@ void Input::Init(Window* window) noexcept {
 
 void Input::Update() noexcept {
     // Sync the states.
-    s_PreviousState = s_CurrentState;
+    s_PreviousKeyState = s_CurrentKeyState;
+    s_PreviousButtonState = s_CurrentButtonState;
 }
 
 void Input::Clear() noexcept {
     // We set all keys to not being pressed.
-    s_CurrentState.reset();
+    s_CurrentKeyState.reset();
+    s_CurrentButtonState.reset();
 }
 
 void Input::SyncKeys() noexcept {
     SMORE_CORE_ASSERT(s_WindowHandle, "Input system, called before Initialization")
 
     // loop through the keys, and update them.
-    for (uint16_t idx = StartkeyCode; idx < MaxKeyCode; idx++) {
-        s_CurrentState.set(idx, glfwGetKey(s_WindowHandle, idx) == GLFW_PRESS);
+    for (uint16_t idx = StartKeyCode; idx < MaxKeyCode; idx++) {
+        s_CurrentKeyState.set(idx, glfwGetKey(s_WindowHandle, idx) == GLFW_PRESS);
     }
-}
+
+    for (uint16_t idx = StartButtonCode; idx < MaxButtonCode; idx++) {
+        s_CurrentButtonState.set(idx, glfwGetMouseButton(s_WindowHandle, idx) == GLFW_PRESS);
+    }
+}  // namespace Smore::Core
 
 void Input::UpdateKey(KeyCode key, bool newState) noexcept {
     // Update the specified key, based on the new state.
-    s_CurrentState.set(static_cast<uint16_t>(key), newState);
+    s_CurrentKeyState.set(static_cast<uint16_t>(key), newState);
+}
+
+void Input::UpdateButton(MouseCode code, bool newState) noexcept {
+    // Update the specified button, based on the new state.
+    s_CurrentButtonState.set(static_cast<uint16_t>(code), newState);
 }
 
 bool Input::IsKeyPressed(KeyCode key) noexcept {
     // Return the state, of the requested key.
-    return s_CurrentState.test(static_cast<uint16_t>(key));
+    return s_CurrentKeyState.test(static_cast<uint16_t>(key));
 }
 
 bool Input::IsKeyJustPressed(KeyCode key) noexcept {
     // Return if the key is currently pressed, and wasn't previously.
-    return (s_CurrentState.test(static_cast<uint16_t>(key)) && !s_PreviousState.test(static_cast<uint16_t>(key)));
+    return (s_CurrentKeyState.test(static_cast<uint16_t>(key)) && !s_PreviousKeyState.test(static_cast<uint16_t>(key)));
 }
 
+bool Input::IsButtonPressed(MouseCode code) noexcept {
+    // Return the state, of the requested key.
+    return s_CurrentButtonState.test(static_cast<uint16_t>(code));
+}
+
+bool Input::IsButtonJustPressed(MouseCode code) noexcept {
+    // Return if the key is currently pressed, and wasn't previously.
+    return (s_CurrentButtonState.test(static_cast<uint16_t>(code)) &&
+            !s_PreviousButtonState.test(static_cast<uint16_t>(code)));
+}
 }  // namespace Smore::Core
