@@ -10,19 +10,20 @@ namespace Smore::Core {
 class HeadlessWindow : public Window {
    public:
     HeadlessWindow(const WindowConfig& config);
-    virtual ~HeadlessWindow() = default;
+    ~HeadlessWindow() = default;
 
-    virtual void PollEvents() override { /* Doesn't do anything */ }
-    virtual void SwapBuffer() noexcept override { /* Doesn't do anything */ }
+    void PollEvents() override { /* Doesn't do anything */ }
+    void SwapBuffer() noexcept override { /* Doesn't do anything */ }
 
-    [[nodiscard]] virtual uint32_t GetWidth() const noexcept override { return m_Data.width; }
-    [[nodiscard]] virtual uint32_t GetHeight() const noexcept override { return m_Data.height; }
-    [[nodiscard]] virtual GraphicsAPI GetAPI() const noexcept override { return m_Data.API; }
+    [[nodiscard]] uint32_t GetWidth() const noexcept override { return m_Data.width; }
+    [[nodiscard]] uint32_t GetHeight() const noexcept override { return m_Data.height; }
+    [[nodiscard]] GraphicsAPI GetAPI() const noexcept override { return m_Data.API; }
+    [[nodiscard]] void* GetNativeHandle() const noexcept override { return nullptr; }
 
-    virtual void SetEventCallback(const std::function<void(Event&)>&) noexcept override { /* Do Nothing */ }
+    void SetEventCallback(const std::function<void(Event&)>&) noexcept override { /* Do Nothing */ }
 
-    virtual void SetVSync(bool enabled) noexcept override { m_Data.VSync = enabled; }
-    [[nodiscard]] virtual bool IsVSync() const noexcept override { return m_Data.VSync; }
+    void SetVSync(bool enabled) noexcept override { m_Data.VSync = enabled; }
+    [[nodiscard]] bool IsVSync() const noexcept override { return m_Data.VSync; }
 
    private:
     struct WindowData {

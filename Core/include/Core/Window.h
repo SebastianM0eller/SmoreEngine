@@ -66,6 +66,12 @@ class Window {
     [[nodiscard]] virtual GraphicsAPI GetAPI() const noexcept = 0;
 
     ///
+    /// Returns a handle to the underlying window.
+    /// The return value is implementation specific.
+    ///
+    [[nodiscard]] virtual void* GetNativeHandle() const noexcept = 0;
+
+    ///
     /// Sets the callback for the window events.
     /// Only one callback can be registered at a time.
     /// The Smore::Events from the window is forwarded to the registered callback.

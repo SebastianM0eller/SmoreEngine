@@ -11,19 +11,20 @@ namespace Smore::Core {
 class GlfwWindow : public Window {
    public:
     GlfwWindow(const WindowConfig& config);
-    virtual ~GlfwWindow();
+    ~GlfwWindow();
 
-    virtual void PollEvents() override;
-    virtual void SwapBuffer() noexcept override;
+    void PollEvents() override;
+    void SwapBuffer() noexcept override;
 
-    [[nodiscard]] virtual uint32_t GetWidth() const noexcept override { return m_Data.width; }
-    [[nodiscard]] virtual uint32_t GetHeight() const noexcept override { return m_Data.height; }
-    [[nodiscard]] virtual GraphicsAPI GetAPI() const noexcept override { return m_Data.API; }
+    [[nodiscard]] uint32_t GetWidth() const noexcept override { return m_Data.width; }
+    [[nodiscard]] uint32_t GetHeight() const noexcept override { return m_Data.height; }
+    [[nodiscard]] GraphicsAPI GetAPI() const noexcept override { return m_Data.API; }
+    [[nodiscard]] void* GetNativeHandle() const noexcept override { return m_Window; }
 
-    virtual void SetEventCallback(const std::function<void(Event&)>&) noexcept override;
+    void SetEventCallback(const std::function<void(Event&)>&) noexcept override;
 
-    virtual void SetVSync(bool enabled) noexcept override;
-    [[nodiscard]] virtual bool IsVSync() const noexcept override { return m_Data.VSync; }
+    void SetVSync(bool enabled) noexcept override;
+    [[nodiscard]] bool IsVSync() const noexcept override { return m_Data.VSync; }
 
    private:
     struct WindowData {

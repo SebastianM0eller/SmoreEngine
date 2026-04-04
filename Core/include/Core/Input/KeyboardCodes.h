@@ -3,9 +3,9 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
-#include <cstdint>
+#include <Core/Defines.h>
 
-#include "Core/Defines.h"
+#include <cstdint>
 
 namespace Smore::Core {
 
@@ -135,7 +135,8 @@ enum class KeyCode : uint16_t {
     RIGHT_CONTROL = 345,
     RIGHT_ALT = 346,
     RIGHT_SUPER = 347,
-    MENU = 348
+    MENU = 348,
+    MAX_CODE
 };
 
 ///

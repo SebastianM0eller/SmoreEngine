@@ -12,6 +12,8 @@
 #include <Runtime/Application.h>
 
 #include "Core/Assert.h"
+#include "Core/Events/KeyboardEvents.h"
+#include "Core/Input/Input.h"
 
 namespace Smore::Runtime {
 
@@ -29,6 +31,8 @@ Application::Application(const ApplicationSpecification& appSpec) : m_Specificat
     }
     m_Window->SetVSync(appSpec.VSync);
     m_Window->SetEventCallback(SMORE_BIND_FN(OnEvent));
+
+    Smore::Core::Input::Init(m_Window.get());
 
     m_LayerStack = std::make_unique<Smore::Runtime::LayerStack>();
 }
@@ -77,6 +81,9 @@ void Application::OnEvent(Smore::Core::Event& event) {
 
     dispatcher.Dispatch<Smore::Core::WindowCloseEvent>(SMORE_BIND_FN(OnWindowClose));
     dispatcher.Dispatch<Smore::Core::WindowResizeEvent>(SMORE_BIND_FN(OnWindowResize));
+    dispatcher.Dispatch<Smore::Core::WindowFocusEvent>(SMORE_BIND_FN(OnWindowFocus));
+    dispatcher.Dispatch<Smore::Core::KeyPressedEvent>(SMORE_BIND_FN(OnKeyPressed));
+    dispatcher.Dispatch<Smore::Core::KeyReleasedEvent>(SMORE_BIND_FN(OnKeyReleased));
 }
 
 bool Application::OnWindowClose(Smore::Core::WindowCloseEvent&) noexcept {
@@ -88,6 +95,28 @@ bool Application::OnWindowClose(Smore::Core::WindowCloseEvent&) noexcept {
 bool Application::OnWindowResize(Smore::Core::WindowResizeEvent&) noexcept {
     // Todo: Forward the event to the applicable system: e.g. renderer.
     return false;
+}
+
+bool Application::OnWindowFocus(Smore::Core::WindowFocusEvent& event) noexcept {
+    if (event.GetFocus()) {
+        Core::Input::SyncKeys();
+    } else {
+        Core::Input::ClearKeys();
+    }
+
+    return false;
+}
+
+bool Application::OnKeyPressed(Smore::Core::KeyPressedEvent& event) noexcept {
+    if (!event.GetRepeat()) {
+        Smore::Core::Input::UpdateKey(event.GetKey(), true);
+    }
+    return true;
+}
+
+bool Application::OnKeyReleased(Smore::Core::KeyReleasedEvent& event) noexcept {
+    Smore::Core::Input::UpdateKey(event.GetKey(), false);
+    return true;
 }
 
 Application& Application::Get() noexcept {

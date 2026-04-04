@@ -19,6 +19,8 @@ set(CORE_SOURCES
   include/Core/Events/EventDispatcher.h
   include/Core/Events/WindowEvents.h
   include/Core/Events/KeyboardEvents.h
+  include/Core/Input/Input.h
+  include/Core/Input/KeyboardCodes.h
   src/Logging.cpp
 )
 
@@ -30,6 +32,7 @@ if (SMORE_HEADLESS)
 else()
   list(APPEND CORE_SOURCES 
     src/Platform/Desktop/GlfwWindow.cpp
+    src/Platform/Desktop/Input.cpp
   )
 endif()
 

@@ -4,7 +4,7 @@
 
 #pragma once
 #include <Core/Events/Event.h>
-#include <Core/KeyboardCodes.h>
+#include <Core/Input/KeyboardCodes.h>
 
 namespace Smore::Core {
 

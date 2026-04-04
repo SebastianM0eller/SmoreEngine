@@ -12,6 +12,7 @@
 #include <memory>
 #include <typeindex>
 
+#include "Core/Events/KeyboardEvents.h"
 #include "Core/Events/WindowEvents.h"
 
 namespace Smore::Runtime {
@@ -55,9 +56,24 @@ class Application {
     bool OnWindowClose(Smore::Core::WindowCloseEvent& event) noexcept;
 
     ///
-    /// Forwards the event, to the appropriate systems, managed by the application.
+    /// Forwards the event, to the appropriate systems.
     ///
     bool OnWindowResize(Smore::Core::WindowResizeEvent& event) noexcept;
+
+    ///
+    /// Forwards the event, to the appropriate systems.
+    ///
+    bool OnWindowFocus(Smore::Core::WindowFocusEvent& event) noexcept;
+
+    ///
+    /// Forwards the event, to the appropriate systems.
+    ///
+    bool OnKeyPressed(Smore::Core::KeyPressedEvent& event) noexcept;
+
+    ///
+    /// Forwards the event, to the appropriate systems.
+    ///
+    bool OnKeyReleased(Smore::Core::KeyReleasedEvent& event) noexcept;
 
     ///
     /// Creates a Layer of the specified type, and pushes it to the internal LayerStack.
