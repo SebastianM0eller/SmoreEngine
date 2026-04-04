@@ -168,6 +168,8 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
             }
             case GLFW_RELEASE: {
                 MouseButtonReleasedEvent event(static_cast<MouseCode>(button));
+                data.eventCallBack(event);
+                break;
             }
         }
     });
