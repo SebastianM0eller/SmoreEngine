@@ -29,4 +29,17 @@ class WindowResizeEvent : public Event {
     uint32_t m_Width, m_Height;
 };
 
+class WindowFocusEvent : public Event {
+   public:
+    WindowFocusEvent(bool focus) : m_Focus(focus) {}
+
+    EVENT_CLASS_TYPE(WindowFocus);
+    EVENT_CLASS_CATEGORY(Window);
+
+    bool GetFocus() const noexcept { return m_Focus; }
+
+   private:
+    bool m_Focus;
+};
+
 }  // namespace Smore::Core

@@ -11,6 +11,8 @@
 
 #include <cstdint>
 
+#include "GLFW/glfw3.h"
+
 #ifdef SMORE_ENABLE_OPENGL
 #    include <Platform/OpenGL/OpenGLContext.h>
 #endif
@@ -120,6 +122,14 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
         data.height = height;
 
         WindowResizeEvent event(width, height);
+        data.eventCallBack(event);
+    });
+
+    // WindowFocusEvent
+    glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focused) {
+        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+        WindowFocusEvent event(focused);
         data.eventCallBack(event);
     });
 
