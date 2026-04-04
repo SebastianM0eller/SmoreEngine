@@ -32,7 +32,7 @@ void Input::Update() noexcept {
     s_PreviousState = s_CurrentState;
 }
 
-void Input::ClearKeys() noexcept {
+void Input::Clear() noexcept {
     // We set all keys to not being pressed.
     s_CurrentState.reset();
 }

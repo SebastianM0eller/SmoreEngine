@@ -8,7 +8,7 @@ namespace Smore::Core {
 
 void Input::Init(Window*) noexcept { /* Do nothing */ }
 void Input::Update() noexcept { /* Do nothing */ }
-void Input::ClearKeys() noexcept { /* Do nothing */ }
+void Input::Clear() noexcept { /* Do nothing */ }
 void Input::SyncKeys() noexcept { /* Do nothing */ }
 void Input::UpdateKey(KeyCode, bool) noexcept { /* Do nothing */ }
 bool Input::IsKeyPressed(KeyCode) noexcept { return false; }

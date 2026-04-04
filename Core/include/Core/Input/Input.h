@@ -34,7 +34,7 @@ class Input {
     /// Clears the state of all keys.
     /// This method should be called, when the window looses focus.
     ///
-    static void ClearKeys() noexcept;
+    static void Clear() noexcept;
 
     ///
     /// Syncs all keys to the current state of the keys.

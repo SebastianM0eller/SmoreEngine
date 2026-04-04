@@ -21,6 +21,7 @@ set(CORE_SOURCES
   include/Core/Events/KeyboardEvents.h
   include/Core/Input/Input.h
   include/Core/Input/KeyboardCodes.h
+  include/Core/Input/MouseCodes.h
   src/Logging.cpp
 )
 
