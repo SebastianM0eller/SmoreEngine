@@ -28,11 +28,12 @@ set(CORE_SOURCES
 if (SMORE_HEADLESS)
   list(APPEND CORE_SOURCES 
     src/Platform/Headless/HeadlessWindow.cpp
+    src/Platform/Headless/HeadlessInput.cpp
   )
 else()
   list(APPEND CORE_SOURCES 
     src/Platform/Desktop/GlfwWindow.cpp
-    src/Platform/Desktop/Input.cpp
+    src/Platform/Desktop/DesktopInput.cpp
   )
 endif()
 
