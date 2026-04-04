@@ -5,13 +5,13 @@
 #include <Core/Assert.h>
 #include <Core/Defines.h>
 #include <Core/Events/KeyboardEvents.h>
+#include <Core/Events/MouseEvents.h>
 #include <Core/Events/WindowEvents.h>
+#include <Core/Input/MouseCodes.h>
 #include <Core/Logging.h>
 #include <Platform/Desktop/GlfwWindow.h>
 
 #include <cstdint>
-
-#include "GLFW/glfw3.h"
 
 #ifdef SMORE_ENABLE_OPENGL
 #    include <Platform/OpenGL/OpenGLContext.h>
@@ -139,12 +139,12 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
 
         switch (action) {
             case GLFW_PRESS: {
-                KeyPressedEvent event(static_cast<KeyCode>(key), static_cast<KeyMods>(mods), false);
+                KeyPressedEvent event(static_cast<KeyCode>(key), static_cast<Mods>(mods), false);
                 data.eventCallBack(event);
                 break;
             }
             case GLFW_REPEAT: {
-                KeyPressedEvent event(static_cast<KeyCode>(key), static_cast<KeyMods>(mods), true);
+                KeyPressedEvent event(static_cast<KeyCode>(key), static_cast<Mods>(mods), true);
                 data.eventCallBack(event);
                 break;
             }
@@ -152,6 +152,22 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
                 KeyReleasedEvent event(static_cast<KeyCode>(key));
                 data.eventCallBack(event);
                 break;
+            }
+        }
+    });
+
+    // MouseButtonEvents
+    glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
+        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+        switch (action) {
+            case GLFW_PRESS: {
+                MouseButtonPressedEvent event(static_cast<MouseCode>(button), static_cast<Mods>(mods));
+                data.eventCallBack(event);
+                break;
+            }
+            case GLFW_RELEASE: {
+                MouseButtonReleasedEvent event(static_cast<MouseCode>(button));
             }
         }
     });

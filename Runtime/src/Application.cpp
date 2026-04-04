@@ -101,7 +101,7 @@ bool Application::OnWindowFocus(Smore::Core::WindowFocusEvent& event) noexcept {
     if (event.GetFocus()) {
         Core::Input::SyncKeys();
     } else {
-        Core::Input::ClearKeys();
+        Core::Input::Clear();
     }
 
     return false;

@@ -4,16 +4,17 @@
 
 #pragma once
 #include <Core/Events/Event.h>
+#include <Core/Input/InputMods.h>
 #include <Core/Input/KeyboardCodes.h>
 
 namespace Smore::Core {
 
 class KeyPressedEvent : public Event {
    public:
-    KeyPressedEvent(KeyCode key, KeyMods mods, bool repeat) noexcept : m_Key(key), m_Mods(mods), m_Repeat(repeat) {}
+    KeyPressedEvent(KeyCode key, Mods mods, bool repeat) noexcept : m_Key(key), m_Mods(mods), m_Repeat(repeat) {}
 
     KeyCode GetKey() const noexcept { return m_Key; }
-    KeyMods GetMods() const noexcept { return m_Mods; }
+    Mods GetMods() const noexcept { return m_Mods; }
     bool GetRepeat() const noexcept { return m_Repeat; }
 
     EVENT_CLASS_TYPE(KeyPressed);
@@ -21,7 +22,7 @@ class KeyPressedEvent : public Event {
 
    private:
     KeyCode m_Key;
-    KeyMods m_Mods;
+    Mods m_Mods;
     bool m_Repeat;
 };
 
