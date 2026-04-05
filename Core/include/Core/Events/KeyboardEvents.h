@@ -4,10 +4,11 @@
 
 #pragma once
 #include <Core/Events/Event.h>
-#include <Core/Input/InputMods.h>
-#include <Core/Input/KeyboardCodes.h>
 
 namespace Smore::Core {
+
+enum Mods : uint8_t;
+enum class KeyCode : uint16_t;
 
 class KeyPressedEvent : public Event {
    public:
