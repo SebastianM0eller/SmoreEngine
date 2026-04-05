@@ -1,2 +1,0 @@
-Create the generic events.
-Capture the events in GLFW Callbacks, convert them to Smore::Event, and call the callback.
