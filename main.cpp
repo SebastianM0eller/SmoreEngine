@@ -2,24 +2,25 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
-#include <Core/Assert.h>
-#include <Core/Input/Input.h>
-#include <Core/Input/KeyboardCodes.h>
-#include <Core/Logging.h>
+#include <Core/Events/Event.h>
 #include <Runtime/Application.h>
 #include <Runtime/Layer.h>
 
+#include <cstdint>
 #include <iostream>
-
-#include "Core/Input/MouseCodes.h"
 
 class TestLayer : public Smore::Runtime::Layer {
    public:
     ~TestLayer() override = default;
-    void OnEvent(Smore::Core::Event& event) override {
-        std::cout << Smore::Core::Input::IsButtonPressed(Smore::Core::MouseCode::LEFT_BUTTON);
-    }
+
+    void OnEvent(Smore::Core::Event& event) override { std::cout << event.GetName() << "\n"; }
     const char* GetName() const noexcept override { return "TestLayer"; }
+
+   private:
+    bool PrintKeyCode(Smore::Core::KeyPressedEvent event) {
+        std::cout << static_cast<uint16_t>(event.GetKey()) << "\n";
+        return false;
+    }
 };
 
 int main() {
