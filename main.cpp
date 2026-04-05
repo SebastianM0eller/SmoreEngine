@@ -6,26 +6,25 @@
 #include <Runtime/Application.h>
 #include <Runtime/Layer.h>
 
-#include <cstdint>
 #include <iostream>
 
-#include "Core/DeltaTime.h"
-#include "Core/Input/Input.h"
+#include "Core/Defines.h"
+#include "Core/Events/EventDispatcher.h"
+#include "Core/Events/MouseEvents.h"
 
 class TestLayer : public Smore::Runtime::Layer {
    public:
     ~TestLayer() override = default;
 
-    void OnUpdate(Smore::Core::DeltaTime) override {
-        auto [mouseX, mouseY] = Smore::Core::Input::GetMousePosition();
-        std::cout << "The mouse position is: " << mouseX << ", " << mouseY << "\n";
+    const char* GetName() const noexcept override { return "TestLayer"; }
+    void OnEvent(Smore::Core::Event& event) override {
+        Smore::Core::EventDispatcher dispatcher(event);
+        dispatcher.Dispatch<Smore::Core::MouseScrolledEvent>(SMORE_BIND_FN(Stuff));
     }
 
-    const char* GetName() const noexcept override { return "TestLayer"; }
-
    private:
-    bool PrintKeyCode(Smore::Core::KeyPressedEvent event) {
-        std::cout << static_cast<uint16_t>(event.GetKey()) << "\n";
+    bool Stuff(Smore::Core::MouseScrolledEvent event) {
+        std::cout << event.GetDeltaX() << ", " << event.GetDeltaY() << "\n";
         return false;
     }
 };

@@ -5,6 +5,7 @@
 #pragma once
 #include <Core/Defines.h>
 
+#include <cstdint>
 #include <string>
 
 // Macros for automating the required virtual methods.
@@ -39,13 +40,12 @@ enum class EventType {
 
 ///
 /// An enum class, holding the different categories of an event.
-/// An event is allowed to be a part of more than one caregory.
 ///
-enum EventCategory {
+enum class EventCategory : uint32_t {
     None = 0,
-    Window = SMORE_BIT(0),
-    Keyboard = SMORE_BIT(1),
-    Mouse = SMORE_BIT(2),
+    Window = 1,
+    Keyboard = 2,
+    Mouse = 3,
 };
 
 ///
