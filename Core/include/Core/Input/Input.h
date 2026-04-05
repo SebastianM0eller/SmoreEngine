@@ -10,7 +10,7 @@ namespace Smore::Core {
 
 class Window;
 enum class KeyCode : uint16_t;
-enum class MouseCode : uint16_t;
+enum class ButtonCode : uint8_t;
 
 ///
 /// Global interface, for querying hardware input state.
@@ -55,7 +55,7 @@ class Input {
     /// Updates the state for the provided mouse button, to the new state.
     /// This method should be called, when a button is pressed or released.
     ///
-    static void UpdateButton(MouseCode code, bool newState) noexcept;
+    static void UpdateButton(ButtonCode code, bool newState) noexcept;
 
     ///
     /// Checks if the specific key is currently being held down.
@@ -73,13 +73,13 @@ class Input {
     /// Check if the specific button is currently being held down.
     /// if it is, this method returns true.
     ///
-    static bool IsButtonPressed(MouseCode code) noexcept;
+    static bool IsButtonPressed(ButtonCode code) noexcept;
 
     ///
     /// Check if the spefific button has just been pressed.
     /// If it has, this method returns true.
     ///
-    static bool IsButtonJustPressed(MouseCode code) noexcept;
+    static bool IsButtonJustPressed(ButtonCode code) noexcept;
 
     ///
     /// Retrieves the current absolute position of the mouse cursor.

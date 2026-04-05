@@ -19,8 +19,8 @@ constexpr uint16_t StartKeyCode = static_cast<uint16_t>(KeyCode::SPACE);
 static std::bitset<MaxKeyCode> s_CurrentKeyState;
 static std::bitset<MaxKeyCode> s_PreviousKeyState;
 
-constexpr uint16_t MaxButtonCode = static_cast<uint16_t>(MouseCode::MAX_CODE);
-constexpr uint16_t StartButtonCode = static_cast<uint16_t>(MouseCode::LEFT_BUTTON);
+constexpr uint16_t MaxButtonCode = static_cast<uint8_t>(ButtonCode::MAX_CODE);
+constexpr uint16_t StartButtonCode = static_cast<uint16_t>(ButtonCode::LEFT_BUTTON);
 
 static std::bitset<MaxButtonCode> s_CurrentButtonState;
 static std::bitset<MaxButtonCode> s_PreviousButtonState;
@@ -62,7 +62,7 @@ void Input::UpdateKey(KeyCode key, bool newState) noexcept {
     s_CurrentKeyState.set(static_cast<uint16_t>(key), newState);
 }
 
-void Input::UpdateButton(MouseCode code, bool newState) noexcept {
+void Input::UpdateButton(ButtonCode code, bool newState) noexcept {
     // Update the specified button, based on the new state.
     s_CurrentButtonState.set(static_cast<uint16_t>(code), newState);
 }
@@ -77,12 +77,12 @@ bool Input::IsKeyJustPressed(KeyCode key) noexcept {
     return (s_CurrentKeyState.test(static_cast<uint16_t>(key)) && !s_PreviousKeyState.test(static_cast<uint16_t>(key)));
 }
 
-bool Input::IsButtonPressed(MouseCode code) noexcept {
+bool Input::IsButtonPressed(ButtonCode code) noexcept {
     // Return the state, of the requested key.
     return s_CurrentButtonState.test(static_cast<uint16_t>(code));
 }
 
-bool Input::IsButtonJustPressed(MouseCode code) noexcept {
+bool Input::IsButtonJustPressed(ButtonCode code) noexcept {
     // Return if the key is currently pressed, and wasn't previously.
     return (s_CurrentButtonState.test(static_cast<uint16_t>(code)) &&
             !s_PreviousButtonState.test(static_cast<uint16_t>(code)));

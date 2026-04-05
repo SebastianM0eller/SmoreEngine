@@ -11,10 +11,10 @@ void Input::Update() noexcept { /* Do nothing */ }
 void Input::Clear() noexcept { /* Do nothing */ }
 void Input::SyncKeys() noexcept { /* Do nothing */ }
 void Input::UpdateKey(KeyCode, bool) noexcept { /* Do nothing */ }
-void Input::UpdateButton(MouseCode, bool) noexcept { /* Do nothing */ }
+void Input::UpdateButton(ButtonCode, bool) noexcept { /* Do nothing */ }
 bool Input::IsKeyPressed(KeyCode) noexcept { return false; }
 bool Input::IsKeyJustPressed(KeyCode) noexcept { return false; }
-bool Input::IsButtonPressed(MouseCode) noexcept { return false; }
-bool Input::IsButtonJustPressed(MouseCode) noexcept { return false; }
+bool Input::IsButtonPressed(ButtonCode) noexcept { return false; }
+bool Input::IsButtonJustPressed(ButtonCode) noexcept { return false; }
 
 }  // namespace Smore::Core

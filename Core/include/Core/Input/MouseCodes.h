@@ -11,7 +11,7 @@ namespace Smore::Core {
 /// Engine specific mouse button input codes.
 /// The values are mapped from GLFW's internal mouse codes, from glfw3.h
 ///
-enum class MouseCode : uint16_t {
+enum class ButtonCode : uint8_t {
     // From glfw3.h
     LEFT_BUTTON = 0,
     RIGHT_BUTTON = 1,

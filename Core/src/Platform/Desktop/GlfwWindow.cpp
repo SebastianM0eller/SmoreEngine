@@ -168,12 +168,12 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
 
         switch (action) {
             case GLFW_PRESS: {
-                MouseButtonPressedEvent event(static_cast<MouseCode>(button), static_cast<Mods>(mods));
+                MouseButtonPressedEvent event(static_cast<ButtonCode>(button), static_cast<Mods>(mods));
                 data.eventCallBack(event);
                 break;
             }
             case GLFW_RELEASE: {
-                MouseButtonReleasedEvent event(static_cast<MouseCode>(button));
+                MouseButtonReleasedEvent event(static_cast<ButtonCode>(button));
                 data.eventCallBack(event);
                 break;
             }
