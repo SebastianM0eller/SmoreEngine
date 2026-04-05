@@ -3,8 +3,6 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
-#include <Core/Defines.h>
-
 #include <cstdint>
 #include <string>
 
@@ -41,7 +39,7 @@ enum class EventType {
 ///
 /// An enum class, holding the different categories of an event.
 ///
-enum class EventCategory : uint32_t {
+enum class EventCategory : uint8_t {
     None = 0,
     Window = 1,
     Keyboard = 2,
@@ -60,17 +58,41 @@ class Event {
    public:
     virtual ~Event() = default;
 
+    ///
+    /// Returns the type of the events. e.g WindowResize or KeyPressed.
+    ///
     [[nodiscard]] virtual EventType GetEventType() const noexcept = 0;
+
+    ///
+    /// Returns the name of the events. e.g. "WindowResize" or "KeyPressed".
+    ///
     [[nodiscard]] virtual const char* GetName() const noexcept = 0;
 
-    // We keep the AsString() virtual, so we have the option, to add additional information later.
+    ///
+    /// Returns a costum formatted string for the event.
+    /// This could be "MouseMoved (deltaX, deltaY)".
+    /// By default it is configured to just return the name GetName();
+    ///
     [[nodiscard]] virtual std::string AsString() const noexcept { return GetName(); };
+
+    ///
+    /// Returns the caregory of the event.
+    /// This could be Window, Mouse or Keyboard.
+    ///
     [[nodiscard]] virtual uint32_t GetCategory() const noexcept = 0;
 
+    ///
+    /// Checks if the event is in the provided category.
+    /// Returns true if it is, false otherwise.
+    ///
     [[nodiscard]] bool IsInCategory(EventCategory category) const {
-        return GetCategory() & static_cast<uint32_t>(category);
+        return GetCategory() & static_cast<uint8_t>(category);
     }
 
+    ///
+    /// A flag to symbol of the event has been consumed or not.
+    /// It could be if a button was pressed, then you don't want the weapon to fire.
+    ///
     bool Handled{false};
 };
 

@@ -83,7 +83,7 @@ void Application::OnEvent(Smore::Core::Event& event) {
 
     switch (event.GetCategory()) {
             // Mouse Events.
-        case static_cast<uint16_t>(Smore::Core::EventCategory::Mouse):
+        case static_cast<uint8_t>(Smore::Core::EventCategory::Mouse):
             if (dispatcher.Dispatch<Smore::Core::MouseMovedEvent>(SMORE_BIND_FN(OnMouseMoved)))
                 return;
             if (dispatcher.Dispatch<Smore::Core::MouseButtonPressedEvent>(SMORE_BIND_FN(OnMouseButtonPressed)))
@@ -94,7 +94,7 @@ void Application::OnEvent(Smore::Core::Event& event) {
             break;
 
         // Keyboard Events.
-        case static_cast<uint16_t>(Smore::Core::EventCategory::Keyboard):
+        case static_cast<uint8_t>(Smore::Core::EventCategory::Keyboard):
             if (dispatcher.Dispatch<Smore::Core::KeyPressedEvent>(SMORE_BIND_FN(OnKeyPressed)))
                 return;
             if (dispatcher.Dispatch<Smore::Core::KeyReleasedEvent>(SMORE_BIND_FN(OnKeyReleased)))
@@ -103,7 +103,7 @@ void Application::OnEvent(Smore::Core::Event& event) {
             break;
 
             // Window Events
-        case static_cast<uint16_t>(Smore::Core::EventCategory::Window):
+        case static_cast<uint8_t>(Smore::Core::EventCategory::Window):
             if (dispatcher.Dispatch<Smore::Core::WindowCloseEvent>(SMORE_BIND_FN(OnWindowClose)))
                 return;
             if (dispatcher.Dispatch<Smore::Core::WindowResizeEvent>(SMORE_BIND_FN(OnWindowResize)))
