@@ -12,9 +12,11 @@
 #include <Runtime/Application.h>
 
 #include "Core/Assert.h"
+#include "Core/Events/Event.h"
 #include "Core/Events/KeyboardEvents.h"
 #include "Core/Events/MouseEvents.h"
 #include "Core/Input/Input.h"
+#include "Core/Window.h"
 
 namespace Smore::Runtime {
 
@@ -80,13 +82,36 @@ void Application::OnEvent(Smore::Core::Event& event) {
 
     Smore::Core::EventDispatcher dispatcher(event);
 
-    dispatcher.Dispatch<Smore::Core::WindowCloseEvent>(SMORE_BIND_FN(OnWindowClose));
-    dispatcher.Dispatch<Smore::Core::WindowResizeEvent>(SMORE_BIND_FN(OnWindowResize));
-    dispatcher.Dispatch<Smore::Core::WindowFocusEvent>(SMORE_BIND_FN(OnWindowFocus));
-    dispatcher.Dispatch<Smore::Core::KeyPressedEvent>(SMORE_BIND_FN(OnKeyPressed));
-    dispatcher.Dispatch<Smore::Core::KeyReleasedEvent>(SMORE_BIND_FN(OnKeyReleased));
-    dispatcher.Dispatch<Smore::Core::MouseButtonPressedEvent>(SMORE_BIND_FN(OnMouseButtonPressed));
-    dispatcher.Dispatch<Smore::Core::MouseButtonReleasedEvent>(SMORE_BIND_FN(OnMouseButtonReleased));
+    switch (event.GetCategory()) {
+            // Mouse Events.
+        case Core::EventCategory::Mouse:
+            if (dispatcher.Dispatch<Smore::Core::MouseMovedEvent>(SMORE_BIND_FN(OnMouseMoved)))
+                return;
+            if (dispatcher.Dispatch<Smore::Core::MouseButtonPressedEvent>(SMORE_BIND_FN(OnMouseButtonPressed)))
+                return;
+            if (dispatcher.Dispatch<Smore::Core::MouseButtonReleasedEvent>(SMORE_BIND_FN(OnMouseButtonReleased)))
+                return;
+
+            break;
+
+            // Keyboard Events.
+        case Smore::Core::Keyboard:
+            if (dispatcher.Dispatch<Smore::Core::KeyPressedEvent>(SMORE_BIND_FN(OnKeyPressed)))
+                return;
+            if (dispatcher.Dispatch<Smore::Core::KeyReleasedEvent>(SMORE_BIND_FN(OnKeyReleased)))
+                return;
+
+            break;
+
+            // Window Events
+        case Smore::Core::Window:
+            if (dispatcher.Dispatch<Smore::Core::WindowCloseEvent>(SMORE_BIND_FN(OnWindowClose)))
+                return;
+            if (dispatcher.Dispatch<Smore::Core::WindowResizeEvent>(SMORE_BIND_FN(OnWindowResize)))
+                return;
+            if (dispatcher.Dispatch<Smore::Core::WindowFocusEvent>(SMORE_BIND_FN(OnWindowFocus)))
+                return;
+    }
 }
 
 bool Application::OnWindowClose(Smore::Core::WindowCloseEvent&) noexcept {
@@ -130,6 +155,16 @@ bool Application::OnMouseButtonPressed(Smore::Core::MouseButtonPressedEvent& eve
 bool Application::OnMouseButtonReleased(Smore::Core::MouseButtonReleasedEvent& event) noexcept {
     Smore::Core::Input::UpdateButton(event.GetCode(), false);
     return true;
+}
+
+bool Application::OnMouseScrolled(Smore::Core::MouseScrolledEvent&) noexcept {
+    // Forward it to something, if applicable.
+    return false;
+}
+
+bool Application::OnMouseMoved(Smore::Core::MouseMovedEvent&) noexcept {
+    // Forward it...
+    return false;
 }
 
 Application& Application::Get() noexcept {

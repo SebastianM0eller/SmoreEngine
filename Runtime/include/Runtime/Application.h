@@ -62,7 +62,9 @@ class Application {
     bool OnWindowResize(Smore::Core::WindowResizeEvent& event) noexcept;
 
     ///
-    /// Forwards the event, to the appropriate systems.
+    /// Forwards the event, to the appropriate systems
+    /// Todo: If the window looses focus, pause the main loop.
+    /// Note: If pausing, remember to still poll events...
     ///
     bool OnWindowFocus(Smore::Core::WindowFocusEvent& event) noexcept;
 
@@ -85,6 +87,16 @@ class Application {
     /// Forwards the event, to the appropriate systems.
     ///
     bool OnMouseButtonReleased(Smore::Core::MouseButtonReleasedEvent& event) noexcept;
+
+    ///
+    /// Forwards the event, to the appropriate systems.
+    ///
+    bool OnMouseScrolled(Smore::Core::MouseScrolledEvent& event) noexcept;
+
+    ///
+    /// Forward the event, to the appropriate systems.
+    ///
+    bool OnMouseMoved(Smore::Core::MouseMovedEvent& event) noexcept;
 
     ///
     /// Creates a Layer of the specified type, and pushes it to the internal LayerStack.

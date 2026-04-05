@@ -41,7 +41,7 @@ enum class EventType {
 /// An enum class, holding the different categories of an event.
 /// An event is allowed to be a part of more than one caregory.
 ///
-enum class EventCategory {
+enum EventCategory {
     None = 0,
     Window = SMORE_BIT(0),
     Keyboard = SMORE_BIT(1),
