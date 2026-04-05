@@ -4,6 +4,7 @@
 
 #pragma once
 #include <cstdint>
+#include <utility>
 
 namespace Smore::Core {
 
@@ -79,6 +80,15 @@ class Input {
     /// If it has, this method returns true.
     ///
     static bool IsButtonJustPressed(MouseCode code) noexcept;
+
+    ///
+    /// Retrieves the current absolute position of the mouse cursor.
+    /// It is returned as a std::pair <xpos, ypos>, relative to the topleft of the window.
+    /// This method should only be used if you need the exact position of the mouse.
+    /// You should never rely on this, to calculate mouse movements.
+    /// Instead you should rely on the MouseMovedEvents.
+    ///
+    static std::pair<float, float> GetMousePosition() noexcept;
 };
 
 }  // namespace Smore::Core

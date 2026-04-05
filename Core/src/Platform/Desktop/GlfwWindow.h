@@ -29,7 +29,9 @@ class GlfwWindow : public Window {
    private:
     struct WindowData {
         GraphicsAPI API;
-        uint32_t width, height;
+        uint32_t width, height;  // Window Size in pixels.
+        float lastX, lastY;      // Mouse Position.
+        bool firstMouse;         // First mouse movement?
         bool VSync;
 
         std::function<void(Event&)> eventCallBack;

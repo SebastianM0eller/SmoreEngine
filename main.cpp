@@ -9,11 +9,18 @@
 #include <cstdint>
 #include <iostream>
 
+#include "Core/DeltaTime.h"
+#include "Core/Input/Input.h"
+
 class TestLayer : public Smore::Runtime::Layer {
    public:
     ~TestLayer() override = default;
 
-    void OnEvent(Smore::Core::Event& event) override { std::cout << event.GetName() << "\n"; }
+    void OnUpdate(Smore::Core::DeltaTime) override {
+        auto [mouseX, mouseY] = Smore::Core::Input::GetMousePosition();
+        std::cout << "The mouse position is: " << mouseX << ", " << mouseY << "\n";
+    }
+
     const char* GetName() const noexcept override { return "TestLayer"; }
 
    private:

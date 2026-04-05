@@ -40,4 +40,34 @@ class MouseButtonReleasedEvent : public Event {
     MouseCode m_Code;
 };
 
+class MouseScrolledEvent : public Event {
+   public:
+    MouseScrolledEvent(float dx, float dy) : m_dx(dx), m_dy(dy) {}
+
+    float GetDeltaX() const noexcept { return m_dx; }
+    float GetDeltaY() const noexcept { return m_dy; }
+
+    EVENT_CLASS_TYPE(MouseScrolled)
+    EVENT_CLASS_CATEGORY(Mouse)
+
+   private:
+    float m_dx;
+    float m_dy;
+};
+
+class MouseMovedEvent : public Event {
+   public:
+    MouseMovedEvent(float dx, float dy) : m_dx(dx), m_dy(dy) {}
+
+    float GetDeltaX() const noexcept { return m_dx; }
+    float GetDeltaY() const noexcept { return m_dy; }
+
+    EVENT_CLASS_TYPE(MouseMoved)
+    EVENT_CLASS_CATEGORY(Mouse)
+
+   private:
+    float m_dx;
+    float m_dy;
+};
+
 }  // namespace Smore::Core

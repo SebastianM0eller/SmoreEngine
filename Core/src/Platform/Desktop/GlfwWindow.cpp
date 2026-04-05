@@ -13,6 +13,8 @@
 
 #include <cstdint>
 
+#include "GLFW/glfw3.h"
+
 #ifdef SMORE_ENABLE_OPENGL
 #    include <Platform/OpenGL/OpenGLContext.h>
 #endif
@@ -41,6 +43,9 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
     m_Data.API = config.API;
     m_Data.width = config.width;
     m_Data.height = config.height;
+    m_Data.lastX = 0;
+    m_Data.lastY = 0;
+    m_Data.firstMouse = true;
     m_Data.VSync = false;
 
     // If we have no windows alive, we need to initialize GLFW.
@@ -104,7 +109,7 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
 
     //
     // We then configure the event callback for GLFW.
-    // This is how out application, communicates with the OS.
+    // This is how our application, receives events from the OS.
     //
 
     // WindowCloseEvent
@@ -131,10 +136,11 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
 
         WindowFocusEvent event(focused);
         data.eventCallBack(event);
+        data.firstMouse = true;
     });
 
     // KeyboardInputEvents
-    glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int, int action, int mods) {
+    glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int /* scancode */, int action, int mods) {
         WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
         switch (action) {
@@ -172,6 +178,34 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
                 break;
             }
         }
+    });
+
+    // MouseScrollEvents
+    glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xoffset, double yoffset) {
+        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+        MouseScrolledEvent event((float)xoffset, (float)yoffset);
+        data.eventCallBack(event);
+    });
+
+    // MouseMovedEvents
+    glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xpos, double ypos) {
+        WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+
+        if (data.firstMouse) {
+            data.lastX = xpos;
+            data.lastY = ypos;
+            data.firstMouse = false;
+        }
+
+        float dx = (float)xpos - data.lastX;
+        float dy = data.lastY - (float)ypos;  // Swapped order, to convert from screenspace to regular coordinates.
+
+        data.lastX = xpos;
+        data.lastY = ypos;
+
+        MouseMovedEvent event(dx, dy);
+        data.eventCallBack(event);
     });
 
     //

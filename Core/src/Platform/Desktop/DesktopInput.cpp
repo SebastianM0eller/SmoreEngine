@@ -88,4 +88,13 @@ bool Input::IsButtonJustPressed(MouseCode code) noexcept {
     return (s_CurrentButtonState.test(static_cast<uint16_t>(code)) &&
             !s_PreviousButtonState.test(static_cast<uint16_t>(code)));
 }
+
+std::pair<float, float> Input::GetMousePosition() noexcept {
+    // Retrieve and return the position from glfw.
+    double xpos, ypos;
+    glfwGetCursorPos(s_WindowHandle, &xpos, &ypos);
+
+    return {(float)xpos, (float)ypos};
+}
+
 }  // namespace Smore::Core
