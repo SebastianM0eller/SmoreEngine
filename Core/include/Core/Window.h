@@ -4,14 +4,14 @@
 
 #pragma once
 
-#include <Core/Events/Event.h>
-
 #include <cstdint>
 #include <functional>
 #include <memory>
 #include <string>
 
 namespace Smore::Core {
+
+class Event;
 
 ///
 /// A enum holding the different GraphicsAPIs.
