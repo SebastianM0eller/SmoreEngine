@@ -36,66 +36,71 @@ struct WindowConfig {
 ///
 class Window {
    public:
-    virtual ~Window() = default;
+    explicit Window(const WindowConfig& config = WindowConfig());
+    ~Window();  // Needs to be implemented in the .cpp after declaration of WindowData.
 
     ///
     /// Processed pending events like keypresses, mouse movement and resizing.
     /// This must be called, at the very beginning of the engine's main loop.
     ///
-    virtual void PollEvents() = 0;
+    void PollEvents();
 
     ///
     /// Swaps the buffer, to display a new frame.
     /// This must be called, at the very end of the engine's main loop.
     ///
-    virtual void SwapBuffer() noexcept = 0;
+    void SwapBuffer() noexcept;
 
     ///
     /// Returns the current width of the window in pixels.
     ///
-    [[nodiscard]] virtual uint32_t GetWidth() const noexcept = 0;
+    [[nodiscard]] uint32_t GetWidth() const noexcept;
 
     ///
     /// Returns the current height of the window in pixels.
     ///
-    [[nodiscard]] virtual uint32_t GetHeight() const noexcept = 0;
+    [[nodiscard]] uint32_t GetHeight() const noexcept;
 
     ///
     /// Return the GraphicsAPI used to initialize the window.
     ///
-    [[nodiscard]] virtual GraphicsAPI GetAPI() const noexcept = 0;
+    [[nodiscard]] GraphicsAPI GetAPI() const noexcept;
 
     ///
     /// Returns a handle to the underlying window.
     /// The return value is implementation specific.
     ///
-    [[nodiscard]] virtual void* GetNativeHandle() const noexcept = 0;
+    [[nodiscard]] void* GetNativeHandle() const noexcept;
 
     ///
     /// Sets the callback for the window events.
     /// Only one callback can be registered at a time.
     /// The Smore::Events from the window is forwarded to the registered callback.
     ///
-    virtual void SetEventCallback(const std::function<void(Event&)>& callback) noexcept = 0;
+    void SetEventCallback(const std::function<void(Event&)>& callback) noexcept;
 
     ///
     /// Enables of disables VSync.
     /// enabled if true.
     /// If VSync is on, the engine's framerate is capped to the monitors refreshrate.
     ///
-    virtual void SetVSync(bool enabled) noexcept = 0;
+    void SetVSync(bool enabled) noexcept;
 
     ///
     /// Returns true if VSync is currently enabled.
     ///
-    [[nodiscard]] virtual bool IsVSync() const noexcept = 0;
+    [[nodiscard]] bool IsVSync() const noexcept;
 
     ///
-    /// Factory methods to create the appropriate window.
+    /// Factory methods to create the window.
     /// Constructs the window, based on the provided WindowConfig.
     /// Returns a unique_ptr to the new window.
     ///
     [[nodiscard]] static std::unique_ptr<Window> Create(const WindowConfig& config = WindowConfig());
+
+   private:
+    struct WindowData;
+    std::unique_ptr<WindowData> m_Data;
 };
 
 }  // namespace Smore::Core
