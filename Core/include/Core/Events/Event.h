@@ -96,4 +96,7 @@ class Event {
     bool Handled{false};
 };
 
+// Todo:
+// For the other events, implement the proper AsString() method...
+
 }  // namespace Smore::Core

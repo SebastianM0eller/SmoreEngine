@@ -147,12 +147,12 @@ bool Application::OnKeyReleased(Smore::Core::KeyReleasedEvent& event) noexcept {
 }
 
 bool Application::OnMouseButtonPressed(Smore::Core::MouseButtonPressedEvent& event) noexcept {
-    Smore::Core::Input::UpdateButton(event.GetCode(), true);
+    Smore::Core::Input::UpdateButton(event.GetButton(), true);
     return true;
 }
 
 bool Application::OnMouseButtonReleased(Smore::Core::MouseButtonReleasedEvent& event) noexcept {
-    Smore::Core::Input::UpdateButton(event.GetCode(), false);
+    Smore::Core::Input::UpdateButton(event.GetButton(), false);
     return true;
 }
 
