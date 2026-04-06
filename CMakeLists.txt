@@ -14,9 +14,9 @@ project(Smore
 # =========================
 
 # Todo: This should prob be based on the CMakePreset.
-option(SMORE_HEADLESS "Compile without window and graphics support" ON)
+option(SMORE_HEADLESS "Compile without window and graphics support" OFF)
 option(SMORE_ENABLE_ASSERTS "Compile with asserts" ON)
-option(SMORE_ENABLE_OPENGL "Compile with OpenGL support" OFF)
+option(SMORE_ENABLE_OPENGL "Compile with OpenGL support" ON)
 
 # =========================
 #      SMORE CONFIG

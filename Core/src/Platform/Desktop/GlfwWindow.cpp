@@ -7,12 +7,10 @@
 #include <Core/Events/MouseEvents.h>
 #include <Core/Events/WindowEvents.h>
 #include <Core/Logging.h>
-#include <Platform/Desktop/GlfwWindow.h>
+#include <Core/Window.h>
 
 // GLFW
 #include <GLFW/glfw3.h>
-
-#include <cstdint>
 
 #ifdef SMORE_ENABLE_OPENGL
 #    include <Platform/OpenGL/OpenGLContext.h>
@@ -31,21 +29,33 @@ static void GLFWErrorCallback(int error, const char* description) {
 /// =========================================
 ///          WINDOW INITIALIZATION
 /// =========================================
+///
+
+struct Window::WindowData {
+    std::function<void(Event&)> EventCallBack;
+    std::unique_ptr<GraphicsContext> Context;
+    GLFWwindow* Handle;
+    GraphicsAPI API;
+    uint32_t width, height;  // Window Size in pixels.
+    float lastX, lastY;      // Mouse Position.
+    bool firstMouse;         // First mouse movement?
+    bool VSync;
+};
 
 static uint8_t s_GlfwWindowCount = 0;
 
-GlfwWindow::GlfwWindow(const WindowConfig& config) {
+Window::Window(const WindowConfig& config) : m_Data(std::make_unique<WindowData>()) {
     //
     // We start by setting the internal data for the window.
     // If it is necessary, we also initialize GLFW.
     //
-    m_Data.API = config.API;
-    m_Data.width = config.width;
-    m_Data.height = config.height;
-    m_Data.lastX = 0;
-    m_Data.lastY = 0;
-    m_Data.firstMouse = true;
-    m_Data.VSync = false;
+    m_Data->API = config.API;
+    m_Data->width = config.width;
+    m_Data->height = config.height;
+    m_Data->lastX = 0;
+    m_Data->lastY = 0;
+    m_Data->firstMouse = true;
+    m_Data->VSync = false;
 
     // If we have no windows alive, we need to initialize GLFW.
     if (s_GlfwWindowCount == 0) {
@@ -62,7 +72,7 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
     // We then set the config for the window, based on the GraphicsAPI.
     // This is required, to to OPENGL being a spoiled brat.
     //
-    switch (m_Data.API) {
+    switch (m_Data->API) {
 #ifdef SMORE_ENABLE_OPENGL
         case GraphicsAPI::OpenGL:
             glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
@@ -89,9 +99,9 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
     // We then initialize the GLFWwindow and set it's custom userdata.
     // We need the internal data, for the callback later.
     //
-    m_Window = glfwCreateWindow(m_Data.width, m_Data.height, config.title.c_str(), NULL, NULL);
+    m_Data->Handle = glfwCreateWindow(m_Data->width, m_Data->height, config.title.c_str(), NULL, NULL);
 
-    if (!m_Window) {
+    if (!m_Data->Handle) {
         if (s_GlfwWindowCount == 0) {
             glfwTerminate();
             SMORE_CORE_FATAL("Failed to create the primary window! Aborting startup!");
@@ -102,9 +112,9 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
     }
 
     s_GlfwWindowCount++;
-    SMORE_CORE_INFO("GlfwWindow was Created: '{}', {}x{}", config.title, m_Data.width, m_Data.height);
+    SMORE_CORE_INFO("GlfwWindow was Created: '{}', {}x{}", config.title, m_Data->width, m_Data->height);
 
-    glfwSetWindowUserPointer(m_Window, &m_Data);
+    glfwSetWindowUserPointer(m_Data->Handle, m_Data.get());
 
     //
     // We then configure the event callback for GLFW.
@@ -112,75 +122,75 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
     //
 
     // WindowCloseEvent
-    glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window) {
+    glfwSetWindowCloseCallback(m_Data->Handle, [](GLFWwindow* window) {
         WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
         WindowCloseEvent event;
-        data.eventCallBack(event);
+        data.EventCallBack(event);
     });
 
     // WindowResizeEvent
-    glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+    glfwSetWindowSizeCallback(m_Data->Handle, [](GLFWwindow* window, int width, int height) {
         WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
         data.width = width;
         data.height = height;
 
         WindowResizeEvent event(width, height);
-        data.eventCallBack(event);
+        data.EventCallBack(event);
     });
 
     // WindowFocusEvent
-    glfwSetWindowFocusCallback(m_Window, [](GLFWwindow* window, int focused) {
+    glfwSetWindowFocusCallback(m_Data->Handle, [](GLFWwindow* window, int focused) {
         WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
         WindowFocusEvent event(focused);
-        data.eventCallBack(event);
+        data.EventCallBack(event);
         data.firstMouse = true;
     });
 
     // KeyboardInputEvents
-    glfwSetKeyCallback(m_Window, [](GLFWwindow* window, int key, int /* scancode */, int action, int mods) {
+    glfwSetKeyCallback(m_Data->Handle, [](GLFWwindow* window, int key, int /* scancode */, int action, int mods) {
         WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
         switch (action) {
             case GLFW_PRESS: {
                 KeyPressedEvent event(static_cast<KeyCode>(key), static_cast<Mods>(mods), false);
-                data.eventCallBack(event);
+                data.EventCallBack(event);
                 break;
             }
             case GLFW_REPEAT: {
                 KeyPressedEvent event(static_cast<KeyCode>(key), static_cast<Mods>(mods), true);
-                data.eventCallBack(event);
+                data.EventCallBack(event);
                 break;
             }
             case GLFW_RELEASE: {
                 KeyReleasedEvent event(static_cast<KeyCode>(key));
-                data.eventCallBack(event);
+                data.EventCallBack(event);
                 break;
             }
         }
     });
 
     // MouseButtonEvents
-    glfwSetMouseButtonCallback(m_Window, [](GLFWwindow* window, int button, int action, int mods) {
+    glfwSetMouseButtonCallback(m_Data->Handle, [](GLFWwindow* window, int button, int action, int mods) {
         WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
         switch (action) {
             case GLFW_PRESS: {
                 MouseButtonPressedEvent event(static_cast<ButtonCode>(button), static_cast<Mods>(mods));
-                data.eventCallBack(event);
+                data.EventCallBack(event);
                 break;
             }
             case GLFW_RELEASE: {
                 MouseButtonReleasedEvent event(static_cast<ButtonCode>(button));
-                data.eventCallBack(event);
+                data.EventCallBack(event);
                 break;
             }
         }
     });
 
     // MouseScrollEvents
-    glfwSetScrollCallback(m_Window, [](GLFWwindow* window, double xoffset, double yoffset) {
+    glfwSetScrollCallback(m_Data->Handle, [](GLFWwindow* window, double xoffset, double yoffset) {
         WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
         // Ignore empty scroll events.
@@ -188,11 +198,11 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
             return;
 
         MouseScrolledEvent event((float)xoffset, (float)yoffset);
-        data.eventCallBack(event);
+        data.EventCallBack(event);
     });
 
     // MouseMovedEvents
-    glfwSetCursorPosCallback(m_Window, [](GLFWwindow* window, double xpos, double ypos) {
+    glfwSetCursorPosCallback(m_Data->Handle, [](GLFWwindow* window, double xpos, double ypos) {
         WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 
         if (data.firstMouse) {
@@ -208,16 +218,16 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
         data.lastY = ypos;
 
         MouseMovedEvent event(dx, dy);
-        data.eventCallBack(event);
+        data.EventCallBack(event);
     });
 
     //
     //
     //
-    switch (m_Data.API) {
+    switch (m_Data->API) {
 #ifdef SMORE_ENABLE_OPENGL
         case GraphicsAPI::OpenGL:
-            m_Context = std::make_unique<OpenGLContext>(m_Window);
+            m_Data->Context = std::make_unique<OpenGLContext>(m_Data->Handle);
             break;
 
 #endif
@@ -229,8 +239,8 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
             break;
     }
 
-    if (m_Context) {
-        m_Context->Init();
+    if (m_Data->Context) {
+        m_Data->Context->Init();
     }
 }
 
@@ -238,9 +248,9 @@ GlfwWindow::GlfwWindow(const WindowConfig& config) {
 ///          WINDOW IMPLEMENTATION
 /// =========================================
 
-GlfwWindow::~GlfwWindow() {
-    if (m_Window) {
-        glfwDestroyWindow(m_Window);
+Window::~Window() {
+    if (m_Data->Handle) {
+        glfwDestroyWindow(m_Data->Handle);
         SMORE_CORE_INFO("GlfwWindow was Destroyed");
 
         s_GlfwWindowCount--;
@@ -252,28 +262,31 @@ GlfwWindow::~GlfwWindow() {
     }
 }
 
-void GlfwWindow::PollEvents() { glfwPollEvents(); }
+void* Window::GetNativeHandle() const noexcept { return m_Data->Handle; }
+GraphicsAPI Window::GetAPI() const noexcept { return m_Data->API; }
 
-void GlfwWindow::SwapBuffer() noexcept {
-    if (m_Context) {
-        m_Context->SwapBuffer();
+uint32_t Window::GetWidth() const noexcept { return m_Data->width; }
+uint32_t Window::GetHeight() const noexcept { return m_Data->height; }
+
+void Window::PollEvents() { glfwPollEvents(); }
+
+void Window::SwapBuffer() noexcept {
+    if (m_Data->Context) {
+        m_Data->Context->SwapBuffer();
     }
 }
 
-void GlfwWindow::SetEventCallback(const std::function<void(Event&)>& callback) noexcept {
-    m_Data.eventCallBack = callback;
+void Window::SetEventCallback(const std::function<void(Event&)>& callback) noexcept {
+    m_Data->EventCallBack = callback;
 }
 
-void GlfwWindow::SetVSync(bool enabled) noexcept {
-    m_Data.VSync = enabled;
-    if (m_Context) {
-        m_Context->SetSwapInterval(enabled);
+void Window::SetVSync(bool enabled) noexcept {
+    m_Data->VSync = enabled;
+    if (m_Data->Context) {
+        m_Data->Context->SetSwapInterval(enabled);
     }
 }
 
-std::unique_ptr<Window> Window::Create(const WindowConfig& config) {
-    // For Desktop mode, we just create a GlfwWindow.
-    return std::make_unique<GlfwWindow>(config);
-}
+std::unique_ptr<Window> Window::Create(const WindowConfig& config) { return std::make_unique<Window>(config); }
 
 }  // namespace Smore::Core
