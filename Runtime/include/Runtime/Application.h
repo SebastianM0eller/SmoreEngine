@@ -5,16 +5,15 @@
 #pragma once
 
 #include <Core/Events/Event.h>
+#include <Core/Events/KeyboardEvents.h>
+#include <Core/Events/MouseEvents.h>
+#include <Core/Events/WindowEvents.h>
 #include <Core/Window.h>
 #include <Runtime/Layer.h>
 
 #include <concepts>
 #include <memory>
 #include <typeindex>
-
-#include "Core/Events/KeyboardEvents.h"
-#include "Core/Events/MouseEvents.h"
-#include "Core/Events/WindowEvents.h"
 
 namespace Smore::Runtime {
 
@@ -169,7 +168,7 @@ class Application {
 
    private:
     ApplicationSpecification m_Specifications;
-    std::unique_ptr<Smore::Core::Window> m_Window;
+    Smore::Core::Window m_Window;
     std::unique_ptr<LayerStack> m_LayerStack;
     bool m_IsRunning;
 

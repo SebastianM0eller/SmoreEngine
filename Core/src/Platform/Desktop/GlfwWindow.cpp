@@ -287,6 +287,4 @@ void Window::SetVSync(bool enabled) noexcept {
     }
 }
 
-std::unique_ptr<Window> Window::Create(const WindowConfig& config) { return std::make_unique<Window>(config); }
-
 }  // namespace Smore::Core

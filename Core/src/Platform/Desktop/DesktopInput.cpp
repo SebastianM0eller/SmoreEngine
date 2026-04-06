@@ -27,9 +27,9 @@ static std::bitset<MaxButtonCode> s_PreviousButtonState;
 
 static GLFWwindow* s_WindowHandle;
 
-void Input::Init(Window* window) noexcept {
+void Input::Init(Window& window) noexcept {
     // We know that for the desktop implementation, the window is a GLFWwindow.
-    s_WindowHandle = static_cast<GLFWwindow*>(window->GetNativeHandle());
+    s_WindowHandle = static_cast<GLFWwindow*>(window.GetNativeHandle());
 }
 
 void Input::Update() noexcept {

@@ -35,6 +35,4 @@ void Window::SetEventCallback(const std::function<void(Event&)>&) noexcept { /* 
 void Window::SetVSync(bool enabled) noexcept { m_Data->VSync = enabled; }
 bool Window::IsVSync() const noexcept { return m_Data->VSync; }
 
-std::unique_ptr<Window> Window::Create(const WindowConfig& config) { return std::make_unique<Window>(config); }
-
 }  // namespace Smore::Core

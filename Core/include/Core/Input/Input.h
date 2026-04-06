@@ -22,7 +22,7 @@ class Input {
     /// It takes the window_ptr to the main application window.
     /// This must be called once in application startup, before querying.
     ///
-    static void Init(Window* window) noexcept;
+    static void Init(Window& window) noexcept;
 
     ///
     /// Updates the implementation specific states.

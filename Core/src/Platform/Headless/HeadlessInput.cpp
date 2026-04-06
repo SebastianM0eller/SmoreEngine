@@ -6,7 +6,7 @@
 
 namespace Smore::Core {
 
-void Input::Init(Window*) noexcept { /* Do nothing */ }
+void Input::Init(Window&) noexcept { /* Do nothing */ }
 void Input::Update() noexcept { /* Do nothing */ }
 void Input::Clear() noexcept { /* Do nothing */ }
 void Input::SyncKeys() noexcept { /* Do nothing */ }

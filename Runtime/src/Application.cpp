@@ -2,39 +2,32 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
+#include <Core/Assert.h>
 #include <Core/Defines.h>
 #include <Core/DeltaTime.h>
 #include <Core/Events/EventDispatcher.h>
 #include <Core/Events/WindowEvents.h>
+#include <Core/Input/Input.h>
 #include <Core/Logging.h>
 #include <Core/Time.h>
+#include <Core/Window.h>
 #include <LayerStack.h>
 #include <Runtime/Application.h>
-
-#include "Core/Assert.h"
-#include "Core/Events/Event.h"
-#include "Core/Events/KeyboardEvents.h"
-#include "Core/Events/MouseEvents.h"
-#include "Core/Input/Input.h"
 
 namespace Smore::Runtime {
 
 static Application* s_Application = nullptr;
 
-Application::Application(const ApplicationSpecification& appSpec) : m_Specifications{appSpec} {
+Application::Application(const ApplicationSpecification& appSpec)
+    : m_Specifications{appSpec}, m_Window(Smore::Core::Window(appSpec.windowConfig)) {
     SMORE_CORE_INFO("Application starting");
 
     s_Application = this;
 
-    m_Window = Core::Window::Create(appSpec.windowConfig);
-    if (!m_Window) {
-        SMORE_CORE_FATAL("Application Window could not be initialized");
-        SMORE_DEBUGBREAK();
-    }
-    m_Window->SetVSync(appSpec.VSync);
-    m_Window->SetEventCallback(SMORE_BIND_FN(OnEvent));
+    m_Window.SetVSync(appSpec.VSync);
+    m_Window.SetEventCallback(SMORE_BIND_FN(OnEvent));
 
-    Smore::Core::Input::Init(m_Window.get());
+    Smore::Core::Input::Init(m_Window);
 
     m_LayerStack = std::make_unique<Smore::Runtime::LayerStack>();
 }
@@ -52,7 +45,7 @@ void Application::Run() {
         const Core::DeltaTime deltaTime((float)(currentTime - lastTime));
         lastTime = currentTime;
 
-        m_Window->PollEvents();
+        m_Window.PollEvents();
 
         for (auto& layer : *m_LayerStack) {
             if (!layer->IsSuspended()) {
@@ -66,12 +59,12 @@ void Application::Run() {
             }
         }
 
-        m_Window->SwapBuffer();
+        m_Window.SwapBuffer();
     }
 }
 
 void Application::OnEvent(Smore::Core::Event& event) {
-    SMORE_CORE_ASSERT(!event.Handled, "Event '{}' arrived at Application, already handled.", event.GetName())
+    SMORE_CORE_ASSERT(!event.Handled, "Event '{}' arrived at Application, already handled.", event.GetName());
 
     for (auto& layer : *m_LayerStack) {
         layer->OnEvent(event);
