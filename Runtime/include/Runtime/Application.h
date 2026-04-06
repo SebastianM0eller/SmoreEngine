@@ -17,8 +17,6 @@
 
 namespace Smore::Runtime {
 
-class LayerStack;  // Predeclare to avoid exposing private API.
-
 ///
 /// A struct containing the specifications necessary to create an Application.
 ///
@@ -167,10 +165,8 @@ class Application {
     [[nodiscard]] static Application& Get() noexcept;
 
    private:
-    ApplicationSpecification m_Specifications;
-    Smore::Core::Window m_Window;
-    std::unique_ptr<LayerStack> m_LayerStack;
-    bool m_IsRunning;
+    struct ApplicationData;
+    std::unique_ptr<ApplicationData> m_Data;
 
     void PushLayer(std::unique_ptr<Layer> newLayer);
     void PushOverlay(std::unique_ptr<Layer> newOVerlay);

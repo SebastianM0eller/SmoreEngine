@@ -14,59 +14,68 @@
 #include <LayerStack.h>
 #include <Runtime/Application.h>
 
+#include <memory>
+
 namespace Smore::Runtime {
 
 static Application* s_Application = nullptr;
 
-Application::Application(const ApplicationSpecification& appSpec)
-    : m_Specifications{appSpec}, m_Window(Smore::Core::Window(appSpec.windowConfig)) {
+struct Application::ApplicationData {
+    ApplicationSpecification Specifications;
+    LayerStack layerStack;
+    Smore::Core::Window Window;
+    bool IsRunning;
+
+    ApplicationData(const ApplicationSpecification& appSpec)
+        : Specifications(appSpec), layerStack(), Window(appSpec.windowConfig), IsRunning(false) {}
+};
+
+Application::Application(const ApplicationSpecification& appSpec) : m_Data(std::make_unique<ApplicationData>(appSpec)) {
     SMORE_CORE_INFO("Application starting");
 
     s_Application = this;
 
-    m_Window.SetVSync(appSpec.VSync);
-    m_Window.SetEventCallback(SMORE_BIND_FN(OnEvent));
+    m_Data->Window.SetVSync(appSpec.VSync);
+    m_Data->Window.SetEventCallback(SMORE_BIND_FN(OnEvent));
 
-    Smore::Core::Input::Init(m_Window);
-
-    m_LayerStack = std::make_unique<Smore::Runtime::LayerStack>();
+    Smore::Core::Input::Init(m_Data->Window);
 }
 
 Application::~Application() { s_Application = nullptr; }
 
 void Application::Run() {
-    m_IsRunning = true;
+    m_Data->IsRunning = true;
 
     double lastTime = Core::Time::GetTime();
 
     // Main loop.
-    while (m_IsRunning) {
+    while (m_Data->IsRunning) {
         const double currentTime = Core::Time::GetTime();
         const Core::DeltaTime deltaTime((float)(currentTime - lastTime));
         lastTime = currentTime;
 
-        m_Window.PollEvents();
+        m_Data->Window.PollEvents();
 
-        for (auto& layer : *m_LayerStack) {
+        for (auto& layer : m_Data->layerStack) {
             if (!layer->IsSuspended()) {
                 layer->OnUpdate(deltaTime);
             }
         }
 
-        for (auto& layer : *m_LayerStack) {
+        for (auto& layer : m_Data->layerStack) {
             if (!layer->IsSuspended()) {
                 layer->OnRender();
             }
         }
 
-        m_Window.SwapBuffer();
+        m_Data->Window.SwapBuffer();
     }
 }
 
 void Application::OnEvent(Smore::Core::Event& event) {
     SMORE_CORE_ASSERT(!event.Handled, "Event '{}' arrived at Application, already handled.", event.GetName());
 
-    for (auto& layer : *m_LayerStack) {
+    for (auto& layer : m_Data->layerStack) {
         layer->OnEvent(event);
         if (event.Handled)
             break;
@@ -108,7 +117,7 @@ void Application::OnEvent(Smore::Core::Event& event) {
 
 bool Application::OnWindowClose(Smore::Core::WindowCloseEvent&) noexcept {
     // Todo: Forward the event to the applicable systems.
-    m_IsRunning = false;
+    m_Data->IsRunning = false;
     return true;
 }
 
@@ -166,27 +175,27 @@ Application& Application::Get() noexcept {
 
 void Application::PushLayer(std::unique_ptr<Layer> newLayer) {
     // We just forward it to the layerstack.
-    m_LayerStack->PushLayer(std::move(newLayer));
+    m_Data->layerStack.PushLayer(std::move(newLayer));
 }
 
 void Application::PushOverlay(std::unique_ptr<Layer> newOverlay) {
     // We just forward it to the layerstack.
-    m_LayerStack->PushOverlay(std::move(newOverlay));
+    m_Data->layerStack.PushOverlay(std::move(newOverlay));
 }
 
 void Application::PopLayer(std::type_index type) {
     // We just forward it to the layerstack.
-    m_LayerStack->PopLayer(type);
+    m_Data->layerStack.PopLayer(type);
 }
 
 void Application::SuspendLayer(std::type_index type) {
     // We just forward it to the layerstack.
-    m_LayerStack->SuspendLayer(type);
+    m_Data->layerStack.SuspendLayer(type);
 }
 
 void Application::ResumeLayer(std::type_index type) {
     // We just forward it to the layerstack.
-    m_LayerStack->ResumeLayer(type);
+    m_Data->layerStack.ResumeLayer(type);
 }
 
 }  // namespace Smore::Runtime
