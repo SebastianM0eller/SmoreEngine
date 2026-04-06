@@ -2,12 +2,12 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
+#include <Core/Logging.h>
+#include <Platform/OpenGL/OpenGLContext.h>
 #include <glad/gl.h>
 
 // Needs to be after <glad/gl.h>
-#include <Core/Logging.h>
 #include <GLFW/glfw3.h>
-#include <Platform/OpenGL/OpenGLContext.h>
 
 namespace Smore::Core {
 

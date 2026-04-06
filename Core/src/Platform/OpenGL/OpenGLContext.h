@@ -4,7 +4,6 @@
 
 #pragma once
 #include <Core/GraphicsContext.h>
-#include <GLFW/glfw3.h>
 
 // Forward declaration, so we don't need to include glfw.
 struct GLFWwindow;

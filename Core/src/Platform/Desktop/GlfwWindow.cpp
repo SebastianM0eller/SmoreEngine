@@ -2,18 +2,17 @@
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
 
-#include <Core/Assert.h>
 #include <Core/Defines.h>
 #include <Core/Events/KeyboardEvents.h>
 #include <Core/Events/MouseEvents.h>
 #include <Core/Events/WindowEvents.h>
-#include <Core/Input/MouseCodes.h>
 #include <Core/Logging.h>
 #include <Platform/Desktop/GlfwWindow.h>
 
-#include <cstdint>
+// GLFW
+#include <GLFW/glfw3.h>
 
-#include "GLFW/glfw3.h"
+#include <cstdint>
 
 #ifdef SMORE_ENABLE_OPENGL
 #    include <Platform/OpenGL/OpenGLContext.h>

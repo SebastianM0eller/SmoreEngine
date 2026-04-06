@@ -3,11 +3,14 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
-#include <Core/GraphicsContext.h>
 #include <Core/Window.h>
-#include <GLFW/glfw3.h>
+
+struct GLFWwindow;
 
 namespace Smore::Core {
+
+class GraphicsContext;
+
 class GlfwWindow : public Window {
    public:
     GlfwWindow(const WindowConfig& config);
