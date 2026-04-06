@@ -3,8 +3,8 @@
 // SPDX-License-Identifier: MIT
 
 #pragma once
-
 #include <cstdint>
+
 namespace Smore::Core {
 
 ///

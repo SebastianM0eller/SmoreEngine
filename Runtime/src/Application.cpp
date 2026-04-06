@@ -44,12 +44,12 @@ Application::~Application() { s_Application = nullptr; }
 void Application::Run() {
     m_IsRunning = true;
 
-    float lastTime = Core::Time::GetTime();
+    double lastTime = Core::Time::GetTime();
 
     // Main loop.
     while (m_IsRunning) {
-        const float currentTime = Core::Time::GetTime();
-        const Core::DeltaTime deltaTime(currentTime - lastTime);
+        const double currentTime = Core::Time::GetTime();
+        const Core::DeltaTime deltaTime((float)(currentTime - lastTime));
         lastTime = currentTime;
 
         m_Window->PollEvents();

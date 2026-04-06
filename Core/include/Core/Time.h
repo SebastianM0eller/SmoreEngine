@@ -15,7 +15,7 @@ class Time {
     /// Returns the time in seconds, since the Engine started.
     /// Uses steady_clock internally, so never returns a negative value.
     ///
-    [[nodiscard]] static float GetTime() noexcept {
+    [[nodiscard]] static double GetTime() noexcept {
         // We use steady_clock because it is monotonic.
         auto time = std::chrono::steady_clock::now();
 
