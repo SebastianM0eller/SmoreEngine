@@ -137,7 +137,7 @@ endif()
 FetchContent_Declare(
     glm
     GIT_REPOSITORY https://github.com/g-truc/glm.git
-    GIT_TAG 0.9.9.8
+    GIT_TAG 1.0.3
 )
 
 FetchContent_MakeAvailable(glm)
@@ -148,6 +148,7 @@ FetchContent_MakeAvailable(glm)
 
 add_subdirectory(Core)
 add_subdirectory(Runtime)
+add_subdirectory(Renderer2D)
 
 # ==================================
 #     ADD ENGINE TARGET
@@ -160,6 +161,7 @@ add_library(Smore INTERFACE)
 target_link_libraries(Smore INTERFACE
   Smore::Core
   Smore::Runtime
+  Smore::Renderer2D
 )
 
 # Create an alias for the Engine.
