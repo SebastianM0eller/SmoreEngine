@@ -103,6 +103,8 @@ endif()
 #        FETCH DEPENDENCIES
 # ==================================
 
+include(FetchContent)
+
 if (NOT SMORE_HEADLESS)
   # Set build options, for faster compilation.
   set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -110,27 +112,35 @@ if (NOT SMORE_HEADLESS)
   set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 
   # Fetch the correct version of GLWF from GitHub.
-  include(FetchContent)
   FetchContent_Declare(
-  glfw                                              
-  GIT_REPOSITORY https://github.com/glfw/glfw.git   
-  GIT_TAG 3.4                                       
+    glfw                                              
+    GIT_REPOSITORY https://github.com/glfw/glfw.git   
+    GIT_TAG 3.4                                       
   )
 
   FetchContent_MakeAvailable(glfw)
 endif()
 
 if (SMORE_ENABLE_OPENGL)
+  # Fetch the specific version of glad.
   FetchContent_Declare(
-        glad
-        GIT_REPOSITORY https://github.com/Dav1dde/glad.git
-        GIT_TAG        v2.0.8
-        SOURCE_SUBDIR  cmake
-    )
-    FetchContent_MakeAvailable(glad)
+    glad
+    GIT_REPOSITORY https://github.com/Dav1dde/glad.git
+    GIT_TAG v2.0.8
+    SOURCE_SUBDIR cmake
+  )
 
-    glad_add_library(glad API gl:core=4.6)
+  FetchContent_MakeAvailable(glad)
+  glad_add_library(glad API gl:core=4.6)
 endif()
+
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG 1.0.3
+)
+
+FetchContent_MakeAvailable(glm)
 
 # ==================================
 #        ADD ENGINE MODULES
@@ -138,6 +148,7 @@ endif()
 
 add_subdirectory(Core)
 add_subdirectory(Runtime)
+add_subdirectory(Renderer2D)
 
 # ==================================
 #     ADD ENGINE TARGET
@@ -150,6 +161,7 @@ add_library(Smore INTERFACE)
 target_link_libraries(Smore INTERFACE
   Smore::Core
   Smore::Runtime
+  Smore::Renderer2D
 )
 
 # Create an alias for the Engine.

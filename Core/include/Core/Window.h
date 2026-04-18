@@ -16,7 +16,7 @@ class Event;
 ///
 /// A enum holding the different GraphicsAPIs.
 ///
-enum class GraphicsAPI {
+enum class GraphicsAPI : uint8_t {
     None,
     OpenGL,
 };
