@@ -9,8 +9,20 @@
 # Set the runtime sources.
 set(RENDERER2D_SOURCES
   include/Renderer2D/Renderer2D.h
+  include/Renderer2D/RendererAPI.h
+  include/Renderer2D/RendererManager.h
+  src/RendererManager.cpp
+  src/Renderer2D.cpp
 )
 
+
+if (SMORE_ENABLE_OPENGL)
+  list(APPEND RENDERER2D_SOURCES
+    src/Platform/OpenGL/OpenglAPI.cpp
+)
+endif()
+
+ 
 add_library(SmoreRenderer2D STATIC ${RENDERER2D_SOURCES})
 add_library(Smore::Renderer2D ALIAS SmoreRenderer2D)
 
