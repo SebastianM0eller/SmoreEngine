@@ -148,7 +148,6 @@ FetchContent_MakeAvailable(glm)
 
 add_subdirectory(Core)
 add_subdirectory(Runtime)
-add_subdirectory(Renderer2D)
 
 # ==================================
 #     ADD ENGINE TARGET
@@ -161,7 +160,10 @@ add_library(Smore INTERFACE)
 target_link_libraries(Smore INTERFACE
   Smore::Core
   Smore::Runtime
-  Smore::Renderer2D
+)
+
+target_include_directories(Smore INTERFACE 
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
 )
 
 # Create an alias for the Engine.
@@ -171,5 +173,4 @@ add_library(Smore::Smore ALIAS Smore)
 #    SANDBOX EXECUTABLE
 # =========================
 
-add_executable(Sandbox main.cpp)
-target_link_libraries(Sandbox PRIVATE Smore::Smore)
+add_subdirectory(Sandbox)
