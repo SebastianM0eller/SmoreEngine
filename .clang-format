@@ -5,4 +5,6 @@ AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
 AllowShortBlocksOnASingleLine: Never
 IndentRequiresClause: false
-IndentPPDirectives: AfterHash
+IAlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 0
