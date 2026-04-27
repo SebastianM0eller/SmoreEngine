@@ -12,8 +12,8 @@ namespace GameOfLife {
 
 class GameOfLifeLayer : public Smore::Runtime::Layer {
    public:
-    GameOfLifeLayer();
-    ~GameOfLifeLayer();
+    GameOfLifeLayer(bool warping, int8_t TPS);
+    ~GameOfLifeLayer() = default;
 
     void OnEvent(Smore::Core::Event& event) override;
     void OnUpdate(Smore::Core::DeltaTime deltaTime) override;
@@ -24,17 +24,24 @@ class GameOfLifeLayer : public Smore::Runtime::Layer {
     std::array<std::array<bool, 1000>, 1000> m_GameBoardPrevious;
 
     bool m_Warping;
+    int8_t TPS;
+
+    ///
+    /// Updates the tile in the current board, based on its previous status,
+    /// and the states of its neighbours in the previous board.
+    ///
+    void UpdateTile(int16_t x, int16_t y);
 
     ///
     /// Returns the amount of alive squares around the provided location.
     /// It takes the location, as x, y coordinates.
     ///
-    uint8_t GetNeighbourCount(uint16_t x, uint16_t y);
+    uint8_t GetNeighbourCount(int16_t x, int16_t y);
 
     ///
     /// Returns true, if the square is alive, and false otherwise.
     ///
-    bool IsAlive(uint16_t x, uint16_t y);
+    bool IsAlive(int16_t x, int16_t y);
 };
 
 }  // namespace GameOfLife

@@ -5,6 +5,3 @@ AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
 AllowShortBlocksOnASingleLine: Never
 IndentRequiresClause: false
-IAlignTrailingComments:
-  Kind: Always
-  OverEmptyLines: 0
