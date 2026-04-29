@@ -5,9 +5,10 @@
 
 namespace GameOfLife {
 
-GameOfLifeLayer::GameOfLifeLayer(
-    /* Add varaint, for how the initial grid is here*/) {
+GameOfLifeLayer::GameOfLifeLayer(bool warping, int8_t TPS) : m_Warping(warping), m_TPS(TPS) {
     // Generate the grid by random by default.
+    // Initialize the graphicsAPI (OpenGL)...
+    // Create the texture used to display on the screen.
 }
 
 void GameOfLifeLayer::OnUpdate(Smore::Core::DeltaTime deltaTime) {

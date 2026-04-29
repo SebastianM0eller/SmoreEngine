@@ -24,7 +24,7 @@ class GameOfLifeLayer : public Smore::Runtime::Layer {
     std::array<std::array<bool, 1000>, 1000> m_GameBoardPrevious;
 
     bool m_Warping;
-    int8_t TPS;
+    int8_t m_TPS;
 
     ///
     /// Updates the tile in the current board, based on its previous status,
