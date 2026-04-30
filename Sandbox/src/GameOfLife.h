@@ -1,6 +1,7 @@
 // Smore - A Game Engine Project.
 // Copyright (c) 2026 Sebastian. All rights reserved.
 // SPDX-License-Identifier: MIT
+
 #pragma once
 #include <Core/DeltaTime.h>
 #include <Core/Events/Event.h>
@@ -15,7 +16,7 @@ class GameOfLifeLayer : public Smore::Runtime::Layer {
     GameOfLifeLayer(bool warping, int8_t TPS);
     ~GameOfLifeLayer() = default;
 
-    void OnEvent(Smore::Core::Event& event) override;
+    // void OnEvent(Smore::Core::Event& event) override;
     void OnUpdate(Smore::Core::DeltaTime deltaTime) override;
     void OnRender() override;
 
@@ -25,6 +26,7 @@ class GameOfLifeLayer : public Smore::Runtime::Layer {
 
     bool m_Warping;
     int8_t m_TPS;
+    float m_Rest{0};  // Tracks the rest from the deltaTime, so we can update based on the TPS.
 
     ///
     /// Updates the tile in the current board, based on its previous status,
