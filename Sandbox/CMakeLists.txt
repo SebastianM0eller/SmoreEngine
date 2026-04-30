@@ -11,4 +11,12 @@ target_sources(GameOfLife PRIVATE main.cpp
   src/GameOfLife.h
   src/GameOfLife.cpp
 )
-target_link_libraries(GameOfLife PUBLIC Smore::Smore)
+
+target_link_libraries(GameOfLife
+  PUBLIC
+  Smore::Smore
+
+  PRIVATE
+  glad
+  glfw
+)

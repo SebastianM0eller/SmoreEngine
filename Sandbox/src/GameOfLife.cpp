@@ -4,8 +4,16 @@
 
 #include "GameOfLife.h"
 
+#include <Core/Assert.h>
+#include <Core/Logging.h>
+#include <glad/gl.h>
+
+// Needs to be after glad
+#include <GLFW/glfw3.h>
+
 #include <cstdint>
 
+#include "Core/Defines.h"
 #include "Random.h"
 
 namespace GameOfLife {
@@ -24,7 +32,11 @@ GameOfLifeLayer::GameOfLifeLayer(bool warping, int8_t TPS) : m_Warping(warping),
         }
     }
 
-    // Initialize the graphicsAPI (OpenGL)...
+    int8_t version = gladLoadGL(glfwGetProcAddress);
+    if (version == 0) {
+        SMORE_CORE_FATAL("Failed to initialize OpenGL using glad");
+        SMORE_DEBUGBREAK();
+    }
 
     // Create the texture used to display on the screen.
 }
