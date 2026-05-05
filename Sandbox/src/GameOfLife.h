@@ -7,13 +7,16 @@
 #include <Core/Events/Event.h>
 #include <Runtime/Layer.h>
 
-#include <array>
+#include <cstdint>
+#include <vector>
 
 namespace GameOfLife {
 
+using GLuint = unsigned int;
+
 class GameOfLifeLayer : public Smore::Runtime::Layer {
    public:
-    GameOfLifeLayer(bool warping, int8_t TPS);
+    GameOfLifeLayer(uint16_t width, uint16_t hieght, bool warping, int8_t TPS);
     ~GameOfLifeLayer() = default;
 
     // void OnEvent(Smore::Core::Event& event) override;
@@ -21,12 +24,21 @@ class GameOfLifeLayer : public Smore::Runtime::Layer {
     void OnRender() override;
 
    private:
-    std::array<std::array<bool, 1000>, 1000> m_GameBoardCurrent;
-    std::array<std::array<bool, 1000>, 1000> m_GameBoardPrevious;
+    std::vector<bool> m_GameBoardCurrent;
+    std::vector<bool> m_GameBoardPrevious;
 
+    uint16_t m_Width;
+    uint16_t m_Height;
+
+    float m_Rest{0};  // Tracks the rest from the deltaTime, so we can update based on the TPS.
+    GLuint m_Texture{0};
     bool m_Warping;
     int8_t m_TPS;
-    float m_Rest{0};  // Tracks the rest from the deltaTime, so we can update based on the TPS.
+
+    ///
+    /// Calculates the index of the specified location in the GameBoard vector.
+    ///
+    uint32_t GetIndex(int16_t x, int16_t y);
 
     ///
     /// Updates the tile in the current board, based on its previous status,

@@ -18,17 +18,19 @@
 
 namespace GameOfLife {
 
-GameOfLifeLayer::GameOfLifeLayer(bool warping, int8_t TPS) : m_Warping(warping), m_TPS(TPS) {
+GameOfLifeLayer::GameOfLifeLayer(uint16_t width, uint16_t height, bool warping, int8_t TPS)
+    : m_Warping(warping), m_TPS(TPS) {
     // We start by generating the grid by random.
 
     // The propability of a grid being alive when spawned.
     // Todo: Create this a parameter, and mabey use the actual prob, instead of Inv.
-    uint8_t spawnChanceInv = 5;  // If 5, the prop of starting alive is 1/5.
+    uint8_t spawnChanceInv = 5;  // If x, the prop of starting alive is 1/x.
 
-    for (int16_t y = 0; y < m_GameBoardCurrent.size(); y++) {
-        for (int16_t x = 0; x < m_GameBoardCurrent[y].size(); x++) {
-            // We update the location, to be alive or dead by chance.
-            m_GameBoardCurrent[y][x] = (bool)Smore::Random::GetRandomInt(0, spawnChanceInv);
+    for (int16_t y = 0; y < m_Height; y++) {
+        for (int16_t x = 0; x < m_Width; x++) {
+            // We calculate the index in the vector, and assign it a random value.
+            uint32_t index = GetIndex(x, y);
+            m_GameBoardCurrent[index] = (bool)Smore::Random::GetRandomInt(0, spawnChanceInv);
         }
     }
 
@@ -38,16 +40,21 @@ GameOfLifeLayer::GameOfLifeLayer(bool warping, int8_t TPS) : m_Warping(warping),
         SMORE_DEBUGBREAK();
     }
 
+    glGenTextures(1, &m_Texture);
+    glBindTexture(GL_TEXTURE_2D, m_Texture);
+
     // Create the texture used to display on the screen.
 }
+
+uint32_t GameOfLifeLayer::GetIndex(int16_t x, int16_t y) { return x + y * m_Width; }
 
 void GameOfLifeLayer::OnUpdate(Smore::Core::DeltaTime deltaTime) {
     m_Rest += deltaTime.GetDeltaTime();
 
     if (m_Rest * m_TPS > 1) {
         // We now do the update.
-        for (int16_t y = 0; y < m_GameBoardCurrent.size(); y++) {
-            for (int16_t x = 0; x < m_GameBoardCurrent[y].size(); x++) {
+        for (int16_t y = 0; y < m_Height; y++) {
+            for (int16_t x = 0; x < m_Width; x++) {
                 UpdateTile(x, y);
             }
         }
@@ -64,9 +71,11 @@ void GameOfLifeLayer::OnRender() {
 }
 
 void GameOfLifeLayer::UpdateTile(int16_t x, int16_t y) {
+    uint32_t index = GetIndex(x, y);
+
     uint8_t neighbours = GetNeighbourCount(x, y);
-    bool square = m_GameBoardPrevious[y][x];
-    bool& currentSquare = m_GameBoardCurrent[y][x];
+    bool square = m_GameBoardPrevious[index];
+    auto currentSquare = m_GameBoardCurrent[index];
 
     // If it is alive...
     if (square == true) {
@@ -93,12 +102,12 @@ uint8_t GameOfLifeLayer::GetNeighbourCount(int16_t x, int16_t y) {
 
 bool GameOfLifeLayer::IsAlive(int16_t x, int16_t y) {
     // We want to discard the result, if it is out of bounds, and if warping is disabled.
-    bool ignore = (x > m_GameBoardPrevious[0].size() || y > m_GameBoardPrevious[0].size()) && !m_Warping;
+    bool ignore = (x > m_Width || y > m_Height && !m_Warping);
 
-    x = x % m_GameBoardPrevious[0].size();
-    y = y % m_GameBoardPrevious.size();
+    x = x % m_Width;
+    y = y % m_Height;
 
-    return m_GameBoardPrevious[y % m_GameBoardPrevious.size()][x];
+    return m_GameBoardPrevious[GetIndex(x, y)];
 }
 
 }  // namespace GameOfLife
