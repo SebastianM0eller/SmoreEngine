@@ -19,7 +19,10 @@
 namespace GameOfLife {
 
 GameOfLifeLayer::GameOfLifeLayer(uint16_t width, uint16_t height, bool warping, int8_t TPS)
-    : m_Warping(warping), m_TPS(TPS) {
+    : m_Width(width), m_Height(height), m_Warping(warping), m_TPS(TPS) {
+    m_GameBoardCurrent.reserve(m_Width * m_Height);
+    m_GameBoardPrevious.reserve(m_Width * m_Height);
+
     // We start by generating the grid by random.
 
     // The propability of a grid being alive when spawned.
@@ -30,7 +33,7 @@ GameOfLifeLayer::GameOfLifeLayer(uint16_t width, uint16_t height, bool warping, 
         for (int16_t x = 0; x < m_Width; x++) {
             // We calculate the index in the vector, and assign it a random value.
             uint32_t index = GetIndex(x, y);
-            m_GameBoardCurrent[index] = (bool)Smore::Random::GetRandomInt(0, spawnChanceInv);
+            m_GameBoardCurrent[index] = !(bool)Smore::Random::GetRandomInt(0, spawnChanceInv) * 255;
         }
     }
 
@@ -42,6 +45,8 @@ GameOfLifeLayer::GameOfLifeLayer(uint16_t width, uint16_t height, bool warping, 
 
     glGenTextures(1, &m_Texture);
     glBindTexture(GL_TEXTURE_2D, m_Texture);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, m_Width, m_Height, 0, GL_RED, GL_UNSIGNED_BYTE, m_GameBoardCurrent.data())
 
     // Create the texture used to display on the screen.
 }
@@ -78,13 +83,13 @@ void GameOfLifeLayer::UpdateTile(int16_t x, int16_t y) {
     auto currentSquare = m_GameBoardCurrent[index];
 
     // If it is alive...
-    if (square == true) {
-        currentSquare = (neighbours == 2 || neighbours == 3);
+    if (square == 255) {
+        currentSquare = 255 * (neighbours == 2 || neighbours == 3);
         return;
     }
 
     // If it is dead...
-    currentSquare = (neighbours == 3);
+    currentSquare = 255 * (neighbours == 3);
 }
 
 uint8_t GameOfLifeLayer::GetNeighbourCount(int16_t x, int16_t y) {
@@ -107,7 +112,7 @@ bool GameOfLifeLayer::IsAlive(int16_t x, int16_t y) {
     x = x % m_Width;
     y = y % m_Height;
 
-    return m_GameBoardPrevious[GetIndex(x, y)];
+    return m_GameBoardPrevious[GetIndex(x, y)] && ignore;
 }
 
 }  // namespace GameOfLife

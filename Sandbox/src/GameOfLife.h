@@ -24,8 +24,8 @@ class GameOfLifeLayer : public Smore::Runtime::Layer {
     void OnRender() override;
 
    private:
-    std::vector<bool> m_GameBoardCurrent;
-    std::vector<bool> m_GameBoardPrevious;
+    std::vector<uint8_t> m_GameBoardCurrent;
+    std::vector<uint8_t> m_GameBoardPrevious;
 
     uint16_t m_Width;
     uint16_t m_Height;
